@@ -1,27 +1,34 @@
 #include <raylib.h>
-#include "ball.h"
+#include "game.hpp"
+
+
 
 int main()
 {
-    Color darkGreen = Color{20, 160, 133, 255};
+    Color darkgrey = { 29, 29, 27, 255};
+    const int screenWidth = 750;
+    const int screenHeight = 700;
 
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-
-    Ball ball = Ball();
-
-    InitWindow(screenWidth, screenHeight, "My first RAYLIB program!");
+    InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
     SetTargetFPS(60);
+
+    Game game;
 
     while (!WindowShouldClose())
     {
+        game.HandleInput();
+        game.Update();
+
         BeginDrawing();
-        ClearBackground(darkGreen);
-        ball.Update();
-        ball.Draw();
+
+        ClearBackground(darkgrey); 
+        game.Draw();
+
+
         EndDrawing();
     }
 
     CloseWindow();
+
     return 0;
 }
