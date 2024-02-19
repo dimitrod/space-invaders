@@ -60,7 +60,8 @@
         {
             "name": "Raylib",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:/raylib/raylib/src/*"
             ],
             "defines": [
                 "_DEBUG",
