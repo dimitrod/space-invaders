@@ -4,6 +4,7 @@
 Game::Game()
 {
     obstacles = CreateObstacles();
+    aliens = CreateAliens();
 }
 
 Game::~Game()
@@ -25,7 +26,10 @@ void Game::Draw()
         obstacle.Draw();
     }
 
-
+    for(auto& alien : aliens)
+    {
+        alien.Draw();
+    }
 
     DeleteInactiveLasers();
 
@@ -83,4 +87,23 @@ std::vector<Obstacle> Game::CreateObstacles()
     }
 
     return obstacles;
+}
+
+std::vector<Alien> Game::CreateAliens()
+{
+    std::vector<Alien> aliens;
+    int alienWidth = 50;
+    float gap = (GetScreenWidth() - 11 * alienWidth) / 12;
+
+    for (int row = 0; row < 5; row++)
+    {
+       for (int col = 0; col < 11; col++)
+       {
+           float offset_x = col * 55;
+           float offset_y = row * 55;
+           aliens.push_back(Alien(1, {offset_x, offset_y}));
+       }
+    }
+
+    return aliens;
 }
