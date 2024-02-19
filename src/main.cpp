@@ -2,7 +2,6 @@
 #include "game.hpp"
 
 
-
 int main()
 {
     Color darkgrey = { 29, 29, 27, 255};
