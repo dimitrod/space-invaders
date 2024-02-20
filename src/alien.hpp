@@ -6,11 +6,12 @@ class Alien
     public:
         Alien(int type, Vector2 position);
         ~Alien();
-        Texture2D image;
+        static Texture2D alienImages[3];
+        static void UnloadAlienImages();
         int type;
         Vector2 position;
         void Draw();
-        void Update();
+        void Update(int direction);
         int GetType();
     private:
 
