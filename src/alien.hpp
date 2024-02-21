@@ -13,6 +13,7 @@ class Alien
         void Draw();
         void Update(int direction);
         int GetType();
+        Rectangle GetRect();
     private:
 
 };

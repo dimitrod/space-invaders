@@ -29,3 +29,9 @@ void Laser::Update()
         }
     }
 }
+
+Rectangle Laser::GetRect()
+{
+    Rectangle rect = {position.x, position.y, 4, 15};
+    return rect;
+}

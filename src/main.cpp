@@ -7,6 +7,7 @@ int main()
     Color darkgrey = { 29, 29, 27, 255};
     const int screenWidth = 750;
     const int screenHeight = 700;
+    
 
     InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
     SetTargetFPS(60);

@@ -59,3 +59,8 @@ void Alien::Update(int direction)
 {
     position.x += direction;
 }
+
+Rectangle Alien::GetRect()
+{
+    return {position.x, position.y, float(alienImages[type - 1].width), float(alienImages[type - 1].height)};
+}

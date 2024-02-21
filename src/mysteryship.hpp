@@ -10,6 +10,7 @@ class MysteryShip
         void Update();
         void Spawn();
         bool alive;
+        Rectangle GetRect();
     private:
         Vector2 position;
         Texture2D image;

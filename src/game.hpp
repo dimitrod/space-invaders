@@ -12,6 +12,7 @@ class Game
         void Draw();
         void Update();
         void HandleInput();
+        bool run;
 
 
     private:
@@ -29,6 +30,12 @@ class Game
         constexpr static float alienLaserShootInterval = 0.35;
         float timeLastAlienFired;
         MysteryShip mysteryShip;
-        float mysteryShipSpawnInterval = 10;
+        float mysteryShipSpawnInterval;
+        float timeLastMysteryShipSpawned;
+        void CheckCollisions();
+        int lives;
+        void GameOver();
+        void Reset();
+        void InitGame();
 
 };
