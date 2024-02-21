@@ -7,7 +7,7 @@ Game::Game()
     music = LoadMusicStream("sound/music.ogg");
     explosionSound = LoadSound("sound/explosion.ogg");
     PlayMusicStream(music);
-    InitGame();
+    gameState = 0;
 }
 
 Game::~Game()
@@ -47,7 +47,7 @@ void Game::Draw()
 
 void Game::Update()
 {
-    if(run) 
+    if(gameState == 1) 
     {
         double currentTime = GetTime();
 
@@ -77,9 +77,18 @@ void Game::Update()
         CheckCollisions();
 
         DeleteInactiveLasers();
-    } else {
+    } 
+    else if (gameState == 0)
+    {
 
-        DrawText("Game Over", GetScreenWidth() / 2 - MeasureText("Game Over", 40) / 2, GetScreenHeight() / 2 - 40, 40, RED);
+        if(IsKeyDown(KEY_ENTER))
+        {
+            Reset();
+            InitGame();
+        }
+    }
+    else if (gameState == 2)
+    {
 
         if(IsKeyDown(KEY_ENTER))
         {
@@ -98,7 +107,7 @@ void Game::HandleInput()
     //    }
 
 
-    if(run){
+    if(gameState == 1){
         if (IsKeyDown(KEY_LEFT))
         {
             spaceship.MoveLeft();
@@ -353,7 +362,7 @@ void Game::CheckCollisions()
 
 void Game::GameOver()
 {
-    run = false;
+    gameState = 2;
 
 }
 
@@ -372,7 +381,7 @@ void Game::InitGame()
     aliensDirection = 1;
     timeLastAlienFired = 0;
     lives = 3;
-    run = true;
+    gameState = 1;
     mysteryShipSpawnInterval = GetRandomValue(10, 20);
     timeLastMysteryShipSpawned = 0;
     score = 0;

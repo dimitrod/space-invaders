@@ -39,11 +39,15 @@ int main()
         DrawRectangleRoundedLines({10, 10, float(screenWidth + offset - 20), float(screenHeight + 2 * offset - 20)}, 0.18f, 20, 2, yellow);
         DrawLineEx({25, 730}, {775, 730}, 3, yellow);
 
-        if(game.run) {
+        if(game.gameState == 1) {
             UpdateMusicStream(game.music);
             DrawTextEx(font, "LEVEL 01", {570, 740}, 34, 2, yellow);
         } 
-        else
+        else if (game.gameState == 0)
+        {
+            DrawTextEx(font, "PAUSE", {570, 740}, 34, 2, yellow);           
+        }
+        else if (game.gameState == 2)
         {
             DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, yellow);           
         }

@@ -12,7 +12,7 @@ class Game
         void Draw();
         void Update();
         void HandleInput();
-        bool run;
+        int gameState;
         int lives;
         Texture2D livesImage;
         int score;
