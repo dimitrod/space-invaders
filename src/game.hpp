@@ -14,6 +14,11 @@ class Game
         void HandleInput();
         bool run;
         int lives;
+        Texture2D livesImage;
+        int score;
+        int highscore;
+        Music music;
+
     private:
         void DeleteInactiveLasers();
         std::vector<Obstacle> CreateObstacles();
@@ -35,5 +40,10 @@ class Game
         void GameOver();
         void Reset();
         void InitGame();
+        void CheckHighscore();
+
+        void SaveHighscoreToFile(int highscore);
+        int LoadHighscoreFromFile();
+        Sound explosionSound;
 
 };
