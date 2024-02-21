@@ -13,8 +13,7 @@ class Game
         void Update();
         void HandleInput();
         bool run;
-
-
+        int lives;
     private:
         void DeleteInactiveLasers();
         std::vector<Obstacle> CreateObstacles();
@@ -33,7 +32,6 @@ class Game
         float mysteryShipSpawnInterval;
         float timeLastMysteryShipSpawned;
         void CheckCollisions();
-        int lives;
         void GameOver();
         void Reset();
         void InitGame();
