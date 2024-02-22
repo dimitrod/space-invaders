@@ -12,6 +12,16 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 7. Shielded boss with destructible shield
 8. Boss battle every third level
 
+## Possible future features:
+1. More bosses (teleportation, dual boss, attack dodging)
+2. Power ups 
+3. Lives restoration
+4. Ship upgrades between levels
+5. Rising difficulty
+6. Starting screen tutorial
+7. More sounds
+8. Turn music on and off
+
 ## How to compile:
 1. Use VSCode
 2. Clone repo
