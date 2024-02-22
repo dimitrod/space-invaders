@@ -1,5 +1,5 @@
 # space-invaders
-A C++ Space Invaders clone based on a tutorial by @educ8s. Code was written as part of the tutorial, I didn't just clone/fork the repo. 😄
+A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was written as part of the tutorial, I didn't just clone/fork the repo. It should be verifiable by the differences in class names, spacings and so on.  😄
 <br>
 
 ## Additonal features implemented by me:
