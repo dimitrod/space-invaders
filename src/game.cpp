@@ -8,6 +8,7 @@ Game::Game()
     explosionSound = LoadSound("sound/explosion.ogg");
     PlayMusicStream(music);
     gameState = 0;
+    livesImage = LoadTexture("img/spaceship.png");
 }
 
 Game::~Game()
@@ -15,6 +16,7 @@ Game::~Game()
     Alien::UnloadAlienImages();
     UnloadMusicStream(music);
     UnloadSound(explosionSound);
+    UnloadTexture(livesImage);
 }
 
 void Game::Draw()
@@ -47,7 +49,16 @@ void Game::Draw()
 
 void Game::Update()
 {
-    if(gameState == 1) 
+    if (gameState == 0)
+    {
+
+        if(IsKeyDown(KEY_ENTER))
+        {
+            Reset();
+            InitGame();
+        }
+    }
+    else if(gameState == 1) 
     {
         double currentTime = GetTime();
 
@@ -77,16 +88,7 @@ void Game::Update()
         CheckCollisions();
 
         DeleteInactiveLasers();
-    } 
-    else if (gameState == 0)
-    {
-
-        if(IsKeyDown(KEY_ENTER))
-        {
-            Reset();
-            InitGame();
-        }
-    }
+    }  
     else if (gameState == 2)
     {
 
@@ -96,16 +98,28 @@ void Game::Update()
             InitGame();
         }
     }
+    else if (gameState == 3)
+    {
+       
+    }
 
 }
 
 void Game::HandleInput()
 {
-    // if (IsKeyPressed(65))
-    //    {
-    //         run = !run;
-    //    }
 
+    if (IsKeyPressed(KEY_ENTER))
+    {
+        if (gameState == 3)
+        {
+            gameState = 1;
+        }
+        else if (gameState == 1)
+        {
+            gameState = 3;
+        }
+
+    }
 
     if(gameState == 1){
         if (IsKeyDown(KEY_LEFT))
@@ -120,6 +134,7 @@ void Game::HandleInput()
         {
             spaceship.FireLaser();
         }
+        
     }
 }
 
