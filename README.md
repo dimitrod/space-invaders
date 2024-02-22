@@ -12,7 +12,7 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 
 ## How to compile:
 1. Use VSCode
-2. Pull repo
+2. Clone repo
 3. Start the main.code-workspace file
 4. Press F5
 
