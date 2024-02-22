@@ -9,7 +9,6 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 4. Game states
 5. Separate UI class
 6. Levels and infinite play
-<br>
 
 ## How to compile:
 1. Use VSCode
