@@ -3,6 +3,7 @@
 #include "obstacle.hpp"
 #include "alien.hpp"
 #include "mysteryship.hpp"
+#include "shieldboss.hpp"
 
 class Game 
 {
@@ -43,6 +44,17 @@ class Game
         void InitGame();
         void NextLevel();
         void CheckHighscore();
+
+        Shieldboss shieldboss;
+        std::vector<Laser> shieldbossLasers;
+        void ShootShieldbossLaser();
+        void MoveShieldboss();
+        void MoveShieldbossDown(int distance);
+        int shieldbossDirection;
+        float timeShieldbossFired;
+        float shieldbossLaserShootInterval;
+
+        int activeGameState;
 
         void SaveHighscoreToFile(int highscore);
         int LoadHighscoreFromFile();

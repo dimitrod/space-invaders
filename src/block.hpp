@@ -7,7 +7,8 @@ class Block {
         Block(Vector2 position);
         void Draw();
         Rectangle GetRect();
+        Vector2 position;
 
     private:
-        Vector2 position;
+        
 };

@@ -31,6 +31,12 @@ void UI::DrawLevel(int level)
     DrawTextEx(font, c, {570, 740}, 34, 2, yellow);
 }
 
+void UI::DrawBoss()
+{
+    DrawTextEx(font, "BOSS", {570, 740}, 34, 2, yellow);    
+}
+
+
 std::string FormatWithLeadingZeros(int number, int width) {
     std::string numberText = std::to_string(number);
     int leadingZeros = width - numberText.length();

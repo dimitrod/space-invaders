@@ -23,6 +23,8 @@ void Game::Draw()
 {
     spaceship.Draw();
 
+    shieldboss.Draw();
+
     for (auto &laser : spaceship.lasers)
     {
         laser.Draw();
@@ -39,6 +41,11 @@ void Game::Draw()
     }
 
     for (auto &laser : alienLasers)
+    {
+        laser.Draw();
+    }
+
+    for (auto &laser : shieldbossLasers)
     {
         laser.Draw();
     }
@@ -61,6 +68,7 @@ void Game::Update()
     else if(gameState == 1) 
     {
         double currentTime = GetTime();
+        activeGameState = 1;
 
         if(currentTime - timeLastMysteryShipSpawned > mysteryShipSpawnInterval)
         {
@@ -106,28 +114,60 @@ void Game::Update()
     }
     else if (gameState == 3)
     {
-       
+
     }
+    else if (gameState == 4)
+    {
+        activeGameState = 4;
+
+        for (auto &laser : shieldbossLasers)
+        {
+            laser.Update();
+        }
+
+        for (auto &laser : spaceship.lasers)
+        {
+            laser.Update();
+        }
+
+        ShootShieldbossLaser();
+
+        MoveShieldboss();
+       
+        CheckCollisions();
+
+        DeleteInactiveLasers();
+
+        
+        if(!shieldboss.alive)
+        {
+            Reset();
+            NextLevel();
+        }
+        
+    }
+
 
 }
 
 void Game::HandleInput()
 {
+    
 
     if (IsKeyPressed(KEY_ENTER))
     {
         if (gameState == 3)
         {
-            gameState = 1;
+            gameState = activeGameState;
         }
-        else if (gameState == 1)
+        else if (gameState == 1 || gameState == 4)
         {
             gameState = 3;
         }
 
     }
 
-    if(gameState == 1){
+    if(gameState == 1 || gameState == 4){
         if (IsKeyDown(KEY_LEFT))
         {
             spaceship.MoveLeft();
@@ -169,6 +209,18 @@ void Game::DeleteInactiveLasers()
             it++;
         }
     }
+
+    for(auto it = shieldbossLasers.begin(); it != shieldbossLasers.end();)
+    {
+        if (!it -> active)
+        {
+            it = shieldbossLasers.erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
 }
 
 std::vector<Obstacle> Game::CreateObstacles()
@@ -189,7 +241,6 @@ std::vector<Alien> Game::CreateAliens()
 {
     std::vector<Alien> aliens;
     int alienWidth = 50;
-    float gap = (GetScreenWidth() - 11 * alienWidth) / 12;
 
     for (int row = 0; row < 5; row++)
     {
@@ -312,10 +363,69 @@ void Game::CheckCollisions()
         CheckHighscore();
     }
 
+    auto bl = shieldboss.blocks.begin();
+
+    while (bl != shieldboss.blocks.end()){ 
+        if (CheckCollisionRecs(bl -> GetRect(), laser.GetRect()))
+        {
+            bl = shieldboss.blocks.erase(bl);
+            laser.active = false;
+        }
+        else
+        {
+            bl++;
+        }
+
+    }
+
+    if (CheckCollisionRecs(shieldboss.GetRect(), laser.GetRect()))
+    {
+        PlaySound(explosionSound);
+        score += 10000;
+        shieldboss.alive = false;
+        laser.active = false;
+        CheckHighscore();
+    }
         
     }
 
+    //Shieldboss Laser
+    for(auto& laser : shieldbossLasers)
+    {
+        if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
+        {
+            lives--;
+            laser.active = false;
+
+            if (lives == 0)
+            {
+                GameOver();
+            }
+        }
+
+        for(auto& obstacle : obstacles)
+        {
+         auto et = obstacle.blocks.begin();
+
+            while (et != obstacle.blocks.end()){ 
+                if (CheckCollisionRecs(et -> GetRect(), laser.GetRect()))
+                {
+                    et = obstacle.blocks.erase(et);
+                    laser.active = false;
+                }
+                else
+                {
+                    et++;
+                }
+
+            }
+        }
+
+    }
+
+
     //Alien Lasers
+
 
     for(auto& laser : alienLasers)
     {
@@ -392,36 +502,87 @@ void Game::Reset()
     spaceship.Reset();
     aliens.clear();
     alienLasers.clear();
+    shieldbossLasers.clear();
     obstacles.clear();
+    shieldboss.Reset();
 }
 
 
 void Game::NextLevel()
 {
-    obstacles = CreateObstacles();
-    aliens = CreateAliens();
-    aliensDirection = 1;
-    timeLastAlienFired = 0;
-    gameState = 1;
-    mysteryShipSpawnInterval = GetRandomValue(10, 20);
-    timeLastMysteryShipSpawned = GetTime();
     level++;
+    if(level % 3 == 0) {
+        Reset();
+        shieldboss.alive = true;
+        shieldbossDirection = 2;
+        timeShieldbossFired = 0;
+        shieldbossLaserShootInterval = 0.5;
+        shieldboss.createArmor();
+        gameState = 4;
+        obstacles = CreateObstacles();
+    }
+    else 
+    {
+        obstacles = CreateObstacles();
+        aliens = CreateAliens();
+        aliensDirection = 1;
+        timeLastAlienFired = 0;
+        gameState = 1;
+        mysteryShipSpawnInterval = GetRandomValue(10, 20);
+        timeLastMysteryShipSpawned = GetTime();
+    }
+    
+    
 }
 
 void Game::InitGame()
 {
-    obstacles = CreateObstacles();
-    aliens = CreateAliens();
-    aliensDirection = 1;
-    timeLastAlienFired = 0;
-    lives = 3;
-    gameState = 1;
-    mysteryShipSpawnInterval = GetRandomValue(10, 20);
-    timeLastMysteryShipSpawned = 0;
+    level = 0;
+    lives = 3; 
     score = 0;
     highscore = LoadHighscoreFromFile();
-    level = 1;
+    NextLevel();
+    
 }
+
+void Game::ShootShieldbossLaser()
+{
+
+    if (GetTime() - timeShieldbossFired >= shieldbossLaserShootInterval && shieldboss.alive)
+    {
+        shieldbossLasers.push_back(Laser({shieldboss.position.x + 26, shieldboss.position.y + 49}, 6));
+        shieldbossLasers.push_back(Laser({shieldboss.position.x + 46, shieldboss.position.y + 49}, 6));
+        timeShieldbossFired = GetTime();
+    }
+
+}
+
+void Game::MoveShieldboss()
+{
+     if(shieldboss.position.x + 69 > GetScreenWidth() - 25)
+        {
+            shieldbossDirection = GetRandomValue(-4, -1);
+            MoveShieldbossDown(12);
+        }
+        else if (shieldboss.position.x < 25)
+        {
+            shieldbossDirection = GetRandomValue(1, 4);
+            MoveShieldbossDown(12);
+        }
+
+        shieldboss.Update(shieldbossDirection);
+    
+}
+
+void Game::MoveShieldbossDown(int distance)
+{
+        shieldboss.position.y += distance;
+        for (auto& block : shieldboss.blocks)
+    {
+        block.position.y += distance;
+    }
+}
+
 
 void Game::CheckHighscore() 
 {

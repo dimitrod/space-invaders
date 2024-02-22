@@ -50,6 +50,11 @@ int main()
             ui.DrawPause();
 
         }
+        else if (game.gameState == 4)
+        {
+            ui.DrawBoss();
+
+        }
        
         for (int i = 0; i < game.lives; i++)
         {    

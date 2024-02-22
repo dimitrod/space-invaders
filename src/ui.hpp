@@ -10,6 +10,7 @@ class UI
         void DrawPause();
         void DrawGameOver(int score, int highscore);
         void DrawStart();
+        void DrawBoss();
         void DrawLevel(int level);
 
     private:
