@@ -88,6 +88,12 @@ void Game::Update()
         CheckCollisions();
 
         DeleteInactiveLasers();
+
+        if(aliens.empty())
+        {
+            Reset();
+            NextLevel();
+        }
     }  
     else if (gameState == 2)
     {
@@ -389,6 +395,19 @@ void Game::Reset()
     obstacles.clear();
 }
 
+
+void Game::NextLevel()
+{
+    obstacles = CreateObstacles();
+    aliens = CreateAliens();
+    aliensDirection = 1;
+    timeLastAlienFired = 0;
+    gameState = 1;
+    mysteryShipSpawnInterval = GetRandomValue(10, 20);
+    timeLastMysteryShipSpawned = GetTime();
+    level++;
+}
+
 void Game::InitGame()
 {
     obstacles = CreateObstacles();
@@ -401,6 +420,7 @@ void Game::InitGame()
     timeLastMysteryShipSpawned = 0;
     score = 0;
     highscore = LoadHighscoreFromFile();
+    level = 1;
 }
 
 void Game::CheckHighscore() 

@@ -36,8 +36,8 @@ int main()
 
         }
         else if(game.gameState == 1) {
-            UpdateMusicStream(game.music);
-            ui.DrawLevel(1);
+            //UpdateMusicStream(game.music);
+            ui.DrawLevel(game.level);
 
         } 
         else if (game.gameState == 2)

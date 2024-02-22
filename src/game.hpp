@@ -18,6 +18,7 @@ class Game
         int score;
         int highscore;
         Music music;
+        int level;
 
     private:
         void DeleteInactiveLasers();
@@ -40,6 +41,7 @@ class Game
         void GameOver();
         void Reset();
         void InitGame();
+        void NextLevel();
         void CheckHighscore();
 
         void SaveHighscoreToFile(int highscore);
