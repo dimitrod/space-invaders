@@ -1,13 +1,21 @@
 # space-invaders
 A C++ Space Invaders clone based on a tutorial by @educ8s.
 
-### Additonal features implemented by me:
+## Additonal features implemented by me:
 1. Start "menu"
 2. Pause button
 3. Better "Game Over" screen
 4. Game states
 5. Separate UI class
 6. Levels and infinite play
+
+## How to compile:
+1. Use VSCode
+2. Pull repo
+3. Start the main.code-workspace file
+4. Press F5
+
+You are on your own if you use another editor/IDE.
 
 ## @educ8s tutorial and repository links:
 https://www.youtube.com/watch?v=TGo3Oxdpr5o <br>
