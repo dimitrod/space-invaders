@@ -28,7 +28,7 @@ void UI::DrawStart()
     Vector2 tutorialText4 = MeasureTextEx(font, "PRESS 1 IN START - SKIP TO FIRST BOSS", 32, 2);
     Vector2 tutorialText5 = MeasureTextEx(font, "P - PAUSE/UNPAUSE MUSIC", 32, 2);
     DrawTextEx(font, "SPACE INVADERS", {400 - titleText.x/2, 300 - titleText.y/2}, 96, 2, RED); 
-    DrawTextEx(font, "PRESS ENTER TO START", {400 - enterText.x/2, 350 - enterText.y/2}, 48, 2, yellow);
+    DrawTextEx(font, "PRESS ENTER TO START", {400 - enterText.x/2, 370 - enterText.y/2}, 48, 2, yellow);
     DrawTextEx(font, "PRESS 1 IN START - SKIP TO FIRST BOSS", {400 - tutorialText4.x/2, 460 - tutorialText4.y/2}, 32, 2, yellow); 
     DrawTextEx(font, "ARROW KEYS - MOVE LEFT/RIGHT", {400 - tutorialText.x/2, 500 - tutorialText.y/2}, 32, 2, yellow); 
     DrawTextEx(font, "P - PAUSE/UNPAUSE MUSIC", {400 - tutorialText5.x/2, 540 - tutorialText5.y/2}, 32, 2, yellow); 
