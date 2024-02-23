@@ -316,7 +316,6 @@ std::vector<Obstacle> Game::CreateObstacles()
 std::vector<Alien> Game::CreateAliens()
 {
     std::vector<Alien> aliens;
-    int alienWidth = 50;
 
     for (int row = 0; row < 5; row++)
     {
