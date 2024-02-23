@@ -33,3 +33,7 @@ You are on your own if you use another editor/IDE.
 ## @educ8s tutorial and repository links:
 https://www.youtube.com/watch?v=TGo3Oxdpr5o <br>
 https://github.com/educ8s/CPP-Space-Invaders-Game-with-raylib
+<br>
+
+## Boss music by Spring Spring:
+https://opengameart.org/content/great-boss
