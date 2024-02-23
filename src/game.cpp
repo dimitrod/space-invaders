@@ -807,12 +807,12 @@ void Game::MoveShieldboss()
      if(shieldboss.position.x + 69 > GetScreenWidth() - 25)
         {
             shieldbossDirection = GetRandomValue(-4, -1);
-            MoveShieldbossDown(12);
+            MoveShieldbossDown(16);
         }
         else if (shieldboss.position.x < 25)
         {
             shieldbossDirection = GetRandomValue(1, 4);
-            MoveShieldbossDown(12);
+            MoveShieldbossDown(16);
         }
 
         shieldboss.Update(shieldbossDirection);
