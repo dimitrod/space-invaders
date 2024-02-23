@@ -20,6 +20,7 @@ class Game
         int score;
         int highscore;
         Music music;
+        Music bossMusic;
         int level;
 
     private:

@@ -5,8 +5,12 @@
 Game::Game()
 {
     music = LoadMusicStream("sound/music.ogg");
+    bossMusic = LoadMusicStream("sound/boss.ogg");
     explosionSound = LoadSound("sound/explosion.ogg");
     PlayMusicStream(music);
+    SetMusicVolume(music, 0.3);
+    PlayMusicStream(bossMusic);
+    SetMusicVolume(bossMusic, 0.2);
     gameState = 0;
     pause = false;
     livesImage = LoadTexture("img/spaceship.png");
@@ -16,6 +20,7 @@ Game::~Game()
 {
     Alien::UnloadAlienImages();
     UnloadMusicStream(music);
+    UnloadMusicStream(bossMusic);
     UnloadSound(explosionSound);
     UnloadTexture(livesImage);
 }
@@ -144,6 +149,7 @@ void Game::Update()
     }
     else if (gameState == 4)
     {
+        UpdateMusicStream(bossMusic);
         activeGameState = 4;
 
         for (auto &laser : shieldbossLasers)
@@ -174,6 +180,7 @@ void Game::Update()
     }
     else if (gameState == 5)
     {
+        UpdateMusicStream(bossMusic);
         activeGameState = 5;
 
         for (auto &laser : teleportbossLasers)
@@ -215,6 +222,8 @@ void Game::HandleInput()
 
         if (pause) PauseMusicStream(music);
         else ResumeMusicStream(music);
+        if (pause) PauseMusicStream(bossMusic);
+        else ResumeMusicStream(bossMusic);
     }
 
 
