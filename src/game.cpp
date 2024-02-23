@@ -624,6 +624,36 @@ void Game::CheckCollisions()
 
     }
 
+    //Shieldboss and Obstacle
+
+    if(shieldboss.alive)
+    {
+        for(auto& obstacle : obstacles)
+        {
+            auto it = obstacle.blocks.begin();
+
+            while (it != obstacle.blocks.end()){ 
+                if (CheckCollisionRecs(it -> GetRect(), shieldboss.GetRect()))
+                {
+                    it = obstacle.blocks.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+
+            }
+        }
+
+        if(CheckCollisionRecs(shieldboss.GetRect(), spaceship.GetRect()))
+        {
+            GameOver();
+        }
+
+    }
+
+   
+
 
 }
 
