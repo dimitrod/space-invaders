@@ -379,7 +379,7 @@ void Game::MoveDownAliens(int distance)
 {
     for (auto &alien : aliens)
     {
-        alien.position.y += distance * (difficulty * 1.5);
+        alien.position.y += distance * ((difficulty * difficulty) - 1);
     }
 }
 
