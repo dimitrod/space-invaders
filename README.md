@@ -3,7 +3,7 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 <br>
 
 ## Additonal features implemented by me:
-1. Start menu with keybindings and skip to boss (press 1)
+1. Start menu with keybindings and skip to random boss (press 1)
 2. Pause button & pause music button
 3. "Game Over" screen with score
 4. Game states
@@ -11,13 +11,13 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 6. Levels and infinite play
 7. Boss battles every third level
 8. Two different bosses - beat them for bonus lives!
-
+9. Rising difficulty (max. reached after 10 levels)
 
 ## Possible future features:
 1. More bosses
 2. Power ups 
 3. Ship upgrades between levels
-4. Rising difficulty
+4. Different player ship designs
 5. More sounds
 
 ## How to compile:

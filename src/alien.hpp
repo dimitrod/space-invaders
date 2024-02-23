@@ -11,7 +11,7 @@ class Alien
         int type;
         Vector2 position;
         void Draw();
-        void Update(int direction);
+        void Update(float direction);
         int GetType();
         Rectangle GetRect();
     private:

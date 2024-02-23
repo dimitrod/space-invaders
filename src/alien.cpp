@@ -55,7 +55,7 @@ void Alien::UnloadAlienImages()
     }
 }
 
-void Alien::Update(int direction)
+void Alien::Update(float direction)
 {
     position.x += direction;
 }

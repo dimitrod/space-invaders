@@ -371,7 +371,7 @@ void Game::MoveDownAliens(int distance)
 {
     for (auto &alien : aliens)
     {
-        alien.position.y += distance;
+        alien.position.y += distance * (difficulty * 1.5);
     }
 }
 
@@ -380,7 +380,7 @@ void Game::ShootAlienLaser()
 {
     double currentTime = GetTime();
 
-    if (currentTime - timeLastAlienFired >= alienLaserShootInterval && !aliens.empty())
+    if (currentTime - timeLastAlienFired >= alienLaserShootInterval - (difficulty-1)/8 && !aliens.empty())
     {
         int randomIndex = GetRandomValue(0, aliens.size() - 1);
         Alien& alien = aliens[randomIndex];
@@ -650,6 +650,8 @@ void Game::Reset()
 void Game::NextLevel()
 {
     level++;
+    if (difficulty < 2.0) difficulty += 0.1;
+
     if(level % 3 == 0) {
         Reset();
         if(GetRandomValue(0, 1) == 0)
@@ -697,6 +699,7 @@ void Game::InitGame()
     level = 0;
     lives = 3; 
     score = 0;
+    difficulty = 2.0;
     highscore = LoadHighscoreFromFile();
     NextLevel();
     

@@ -68,6 +68,7 @@ class Game
 
         int activeGameState;
         bool pause;
+        float difficulty;
 
         void SaveHighscoreToFile(int highscore);
         int LoadHighscoreFromFile();
