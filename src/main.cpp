@@ -36,7 +36,7 @@ int main()
 
         }
         else if(game.gameState == 1) {
-            //UpdateMusicStream(game.music);
+            
             ui.DrawLevel(game.level);
 
         } 

@@ -8,6 +8,7 @@ Game::Game()
     explosionSound = LoadSound("sound/explosion.ogg");
     PlayMusicStream(music);
     gameState = 0;
+    pause = false;
     livesImage = LoadTexture("img/spaceship.png");
 }
 
@@ -24,6 +25,8 @@ void Game::Draw()
     spaceship.Draw();
 
     shieldboss.Draw();
+
+    teleportboss.Draw();
 
     for (auto &laser : spaceship.lasers)
     {
@@ -50,6 +53,11 @@ void Game::Draw()
         laser.Draw();
     }
 
+    for (auto &laser : teleportbossLasers)
+    {
+        laser.Draw();
+    }
+
     mysteryShip.Draw();
 
 }
@@ -64,9 +72,19 @@ void Game::Update()
             Reset();
             InitGame();
         }
+        if(IsKeyDown(49))
+        {
+            Reset();
+            InitGame();
+            Reset();
+            level = 2;
+            NextLevel();
+        }
     }
     else if(gameState == 1) 
     {
+        UpdateMusicStream(music);
+
         double currentTime = GetTime();
         activeGameState = 1;
 
@@ -111,6 +129,14 @@ void Game::Update()
             Reset();
             InitGame();
         }
+        if(IsKeyDown(49))
+        {
+            Reset();
+            InitGame();
+            Reset();
+            level = 2;
+            NextLevel();
+        }
     }
     else if (gameState == 3)
     {
@@ -146,6 +172,36 @@ void Game::Update()
         }
         
     }
+    else if (gameState == 5)
+    {
+        activeGameState = 5;
+
+        for (auto &laser : teleportbossLasers)
+        {
+            laser.Update();
+        }
+
+        for (auto &laser : spaceship.lasers)
+        {
+            laser.Update();
+        }
+
+        ShootTeleportbossLaser();
+
+        MoveTeleportboss();
+       
+        CheckCollisions();
+
+        DeleteInactiveLasers();
+
+        
+        if(!teleportboss.alive)
+        {
+            Reset();
+            NextLevel();
+        }
+        
+    }
 
 
 }
@@ -153,6 +209,14 @@ void Game::Update()
 void Game::HandleInput()
 {
     
+    if (IsKeyPressed(KEY_P))
+    {
+        pause = !pause;
+
+        if (pause) PauseMusicStream(music);
+        else ResumeMusicStream(music);
+    }
+
 
     if (IsKeyPressed(KEY_ENTER))
     {
@@ -160,14 +224,14 @@ void Game::HandleInput()
         {
             gameState = activeGameState;
         }
-        else if (gameState == 1 || gameState == 4)
+        else if (gameState == 1 || gameState == 4 || gameState == 5)
         {
             gameState = 3;
         }
 
     }
 
-    if(gameState == 1 || gameState == 4){
+    if(gameState == 1 || gameState == 4 || gameState == 5){
         if (IsKeyDown(KEY_LEFT))
         {
             spaceship.MoveLeft();
@@ -215,6 +279,18 @@ void Game::DeleteInactiveLasers()
         if (!it -> active)
         {
             it = shieldbossLasers.erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
+
+    for(auto it = teleportbossLasers.begin(); it != teleportbossLasers.end();)
+    {
+        if (!it -> active)
+        {
+            it = teleportbossLasers.erase(it);
         }
         else
         {
@@ -378,11 +454,37 @@ void Game::CheckCollisions()
 
     }
 
-    if (CheckCollisionRecs(shieldboss.GetRect(), laser.GetRect()))
+    auto tl = teleportboss.blocks.begin();
+
+    while (tl != teleportboss.blocks.end()){ 
+        if (CheckCollisionRecs(tl -> GetRect(), laser.GetRect()))
+        {
+            tl = teleportboss.blocks.erase(tl);
+            laser.active = false;
+        }
+        else
+        {
+            tl++;
+        }
+
+    }
+
+    if (CheckCollisionRecs(shieldboss.GetRect(), laser.GetRect()) && shieldboss.alive)
     {
         PlaySound(explosionSound);
-        score += 10000;
+        score += 15000;
+        lives++;
         shieldboss.alive = false;
+        laser.active = false;
+        CheckHighscore();
+    }
+
+    if (CheckCollisionRecs(teleportboss.GetRect(), laser.GetRect()) && teleportboss.alive)
+    {
+        PlaySound(explosionSound);
+        score += 25000;
+        lives += 2;
+        teleportboss.alive = false;
         laser.active = false;
         CheckHighscore();
     }
@@ -391,6 +493,41 @@ void Game::CheckCollisions()
 
     //Shieldboss Laser
     for(auto& laser : shieldbossLasers)
+    {
+        if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
+        {
+            lives--;
+            laser.active = false;
+
+            if (lives == 0)
+            {
+                GameOver();
+            }
+        }
+
+        for(auto& obstacle : obstacles)
+        {
+         auto et = obstacle.blocks.begin();
+
+            while (et != obstacle.blocks.end()){ 
+                if (CheckCollisionRecs(et -> GetRect(), laser.GetRect()))
+                {
+                    et = obstacle.blocks.erase(et);
+                    laser.active = false;
+                }
+                else
+                {
+                    et++;
+                }
+
+            }
+        }
+
+    }
+
+
+   //Teleportboss Laser
+    for(auto& laser : teleportbossLasers)
     {
         if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
         {
@@ -503,8 +640,10 @@ void Game::Reset()
     aliens.clear();
     alienLasers.clear();
     shieldbossLasers.clear();
+    teleportbossLasers.clear();
     obstacles.clear();
     shieldboss.Reset();
+    teleportboss.Reset();
 }
 
 
@@ -513,13 +652,31 @@ void Game::NextLevel()
     level++;
     if(level % 3 == 0) {
         Reset();
-        shieldboss.alive = true;
-        shieldbossDirection = 2;
-        timeShieldbossFired = 0;
-        shieldbossLaserShootInterval = 0.5;
-        shieldboss.createArmor();
-        gameState = 4;
-        obstacles = CreateObstacles();
+        if(GetRandomValue(0, 1) == 0)
+        {
+            teleportboss.alive = true;
+            teleportbossDirection = 2;
+            timeTeleportbossFired = 0;
+            teleportbossLaserDirection = 1;
+            teleportbossLaserShootInterval = 5.0;
+            teleportbossTeleportInterval = 3.0;
+            teleportbossTeleported = 0;
+            teleportboss.createArmor();
+            gameState = 5;
+            obstacles = CreateObstacles();
+        }
+        else
+        {
+            shieldboss.alive = true;
+            shieldbossDirection = 2;
+            timeShieldbossFired = 0;
+            shieldbossLaserShootInterval = 0.5;
+            shieldboss.createArmor();
+            gameState = 4;
+            obstacles = CreateObstacles();
+        }
+
+ 
     }
     else 
     {
@@ -544,6 +701,62 @@ void Game::InitGame()
     NextLevel();
     
 }
+
+
+
+void Game::ShootTeleportbossLaser()
+{
+
+    if (GetTime() - timeTeleportbossFired >= teleportbossLaserShootInterval && teleportboss.alive)
+    {
+        
+
+        if (teleportbossLaserDirection == 1)
+        {
+            float shotStart = GetRandomValue(0, 440);
+
+            for (int i = 0; i < 30; i++)
+            {
+                
+                teleportbossLasers.push_back(Laser({shotStart + i * 12, teleportboss.position.y + i * 2}, 8));
+            
+            }
+
+           teleportbossLaserDirection = -1;
+        }
+        else if (teleportbossLaserDirection == -1)
+        {
+            float shotStart = GetRandomValue(0, 440);
+
+            for (int i = 30; i > 0; i--)
+            {
+                
+                teleportbossLasers.push_back(Laser({shotStart + (30 - i) * 12, teleportboss.position.y + i * 2}, 8));
+            
+            }
+            teleportbossLaserDirection = 1;
+        }
+
+        timeTeleportbossFired = GetTime();
+    }
+
+
+}
+
+void Game::MoveTeleportboss()
+{
+    if (GetTime() - teleportbossTeleported >= teleportbossTeleportInterval && teleportboss.alive)
+    {
+        teleportboss.Update({(float) GetRandomValue(25, 727), (float) GetRandomValue(100, 400)});
+        teleportbossLasers.push_back(Laser({teleportboss.position.x + 23, teleportboss.position.y + 20}, 12));
+        teleportbossLasers.push_back(Laser({teleportboss.position.x + 24, teleportboss.position.y + 24}, 12));
+        teleportbossLasers.push_back(Laser({teleportboss.position.x + 25, teleportboss.position.y + 24}, 12));
+        teleportbossLasers.push_back(Laser({teleportboss.position.x + 26, teleportboss.position.y + 20}, 12));
+        teleportbossTeleported = GetTime();
+    }
+
+}
+
 
 void Game::ShootShieldbossLaser()
 {

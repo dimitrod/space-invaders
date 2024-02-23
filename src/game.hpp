@@ -4,6 +4,7 @@
 #include "alien.hpp"
 #include "mysteryship.hpp"
 #include "shieldboss.hpp"
+#include "teleportboss.hpp"
 
 class Game 
 {
@@ -54,7 +55,19 @@ class Game
         float timeShieldbossFired;
         float shieldbossLaserShootInterval;
 
+        Teleportboss teleportboss;
+        std::vector<Laser> teleportbossLasers;
+        void ShootTeleportbossLaser();
+        void MoveTeleportboss();
+        int teleportbossDirection;
+        float timeTeleportbossFired;
+        float teleportbossLaserShootInterval;
+        float teleportbossTeleportInterval;
+        float teleportbossTeleported;
+        int teleportbossLaserDirection;
+
         int activeGameState;
+        bool pause;
 
         void SaveHighscoreToFile(int highscore);
         int LoadHighscoreFromFile();

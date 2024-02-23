@@ -3,28 +3,27 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 <br>
 
 ## Additonal features implemented by me:
-1. Start "menu"
-2. Pause button
-3. Better "Game Over" screen
+1. Start menu with keybindings and skip to boss (press 1)
+2. Pause button & pause music button
+3. "Game Over" screen with score
 4. Game states
 5. Separate UI class
 6. Levels and infinite play
-7. Shielded boss with destructible shield
-8. Boss battle every third level
+7. Boss battles every third level
+8. Two different bosses - beat them for bonus lives!
+
 
 ## Possible future features:
-1. More bosses (teleportation, dual boss, attack dodging)
+1. More bosses
 2. Power ups 
-3. Lives restoration
-4. Ship upgrades between levels
-5. Rising difficulty
-6. Starting screen tutorial
-7. More sounds
-8. Turn music on and off
+3. Ship upgrades between levels
+4. Rising difficulty
+5. More sounds
 
 ## How to compile:
 1. Use VSCode
 2. Clone repo
+3. Install raylib (https://www.raylib.com/) to default path 
 3. Start the main.code-workspace file
 4. Press F5
 
