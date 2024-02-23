@@ -737,7 +737,7 @@ void Game::InitGame()
     level = 0;
     lives = 3; 
     score = 0;
-    difficulty = 2.0;
+    difficulty = 1.0;
     highscore = LoadHighscoreFromFile();
     NextLevel();
     
