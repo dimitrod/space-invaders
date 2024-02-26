@@ -2,20 +2,6 @@
 #include <raylib.h>
 
 
-Shieldboss::Shieldboss()
-{
-    position = {465, 150};
-    alive = false;
-
-    
-
-}
-
-Shieldboss::~Shieldboss()
-{
-
-}
-
 void Shieldboss::createArmor()
 {
    for (unsigned int row = 0; row < grid.size(); row++)

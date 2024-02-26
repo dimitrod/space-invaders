@@ -2,9 +2,6 @@
 
 MysteryShip::MysteryShip()
 {
-    alive = false;
-    position = {0, 0};
-    speed = 0;
     image = LoadTexture("img/mystery.png");
 }
 

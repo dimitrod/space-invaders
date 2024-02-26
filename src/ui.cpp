@@ -6,8 +6,6 @@
 UI::UI()
 {
     font = LoadFontEx("font/monogram.ttf", 64, 0, 0);
-    darkgrey = { 29, 29, 27, 255};
-    yellow = { 243, 216, 63, 255};
 }
 
 UI::~UI()

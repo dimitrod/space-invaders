@@ -1,21 +1,6 @@
 #include "teleportboss.hpp"
 #include <raylib.h>
 
-
-Teleportboss::Teleportboss()
-{
-    position = {454, 150};
-    alive = false;
-
-    
-
-}
-
-Teleportboss::~Teleportboss()
-{
-
-}
-
 void Teleportboss::createArmor()
 {
    for (unsigned int row = 0; row < grid.size(); row++)
