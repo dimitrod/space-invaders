@@ -22,6 +22,7 @@ class Game
         Music music;
         Music bossMusic;
         int level;
+        bool info = false;
 
     private:
         void DeleteInactiveLasers();

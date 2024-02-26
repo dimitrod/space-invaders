@@ -6,33 +6,46 @@
 UI::UI()
 {
     font = LoadFontEx("font/monogram.ttf", 64, 0, 0);
+    
 }
 
 UI::~UI()
 {
     UnloadFont(font);
-}   
+}
 
-void UI::DrawStart()
+void UI::CenterText(const char *text, int fontSize, int y, Color color)
 {
-    
+    Vector2 textSize = MeasureTextEx(font, text, fontSize, 2);
+    DrawTextEx(font, text, {400 - textSize.x/2, y - textSize.y/2}, fontSize, 2, color);
+}
 
+void UI::DrawLives(int lives, Texture2D livesImage)
+{
+    for (int i = 0; i < lives; i++)
+    {    
+        DrawTextureV(livesImage, {(float) 75 + 50 * i, 745}, WHITE);
+    }
+}
 
-    Vector2 titleText = MeasureTextEx(font, "SPACE INVADERS", 96, 2);
-    Vector2 enterText = MeasureTextEx(font, "PRESS ENTER TO START", 48, 2);
-    Vector2 tutorialText = MeasureTextEx(font, "ARROW KEYS - MOVE LEFT/RIGHT", 32, 2);
-    Vector2 tutorialText2 = MeasureTextEx(font, "ENTER - PAUSE/UNPAUSE", 32, 2);
-    Vector2 tutorialText3 = MeasureTextEx(font, "SPACE - SHOOT", 32, 2);
-    Vector2 tutorialText4 = MeasureTextEx(font, "PRESS 1 IN START - SKIP TO FIRST BOSS", 32, 2);
-    Vector2 tutorialText5 = MeasureTextEx(font, "P - PAUSE/UNPAUSE MUSIC", 32, 2);
-    DrawTextEx(font, "SPACE INVADERS", {400 - titleText.x/2, 300 - titleText.y/2}, 96, 2, RED); 
-    DrawTextEx(font, "PRESS ENTER TO START", {400 - enterText.x/2, 370 - enterText.y/2}, 48, 2, yellow);
-    DrawTextEx(font, "PRESS 1 IN START - SKIP TO FIRST BOSS", {400 - tutorialText4.x/2, 460 - tutorialText4.y/2}, 32, 2, yellow); 
-    DrawTextEx(font, "ARROW KEYS - MOVE LEFT/RIGHT", {400 - tutorialText.x/2, 500 - tutorialText.y/2}, 32, 2, yellow); 
-    DrawTextEx(font, "P - PAUSE/UNPAUSE MUSIC", {400 - tutorialText5.x/2, 540 - tutorialText5.y/2}, 32, 2, yellow); 
-    DrawTextEx(font, "ENTER - PAUSE/UNPAUSE", {400 - tutorialText2.x/2, 580 - tutorialText2.y/2}, 32, 2, yellow);
-    DrawTextEx(font, "SPACE - SHOOT", {400 - tutorialText3.x/2, 620 - tutorialText3.y/2}, 32, 2, yellow); 
-    
+void UI::DrawStart(bool info)
+{
+    CenterText("SPACE INVADERS", 96, 280, RED);
+    CenterText("PRESS ENTER TO START", 48, 350, yellow);
+
+    if (info)
+    {
+        CenterText("PRESS 1 TO SKIP TO FIRST BOSS", 32, 440, yellow);
+        CenterText("ARROW KEYS - MOVE LEFT/RIGHT", 32, 480, yellow);    
+        CenterText("P - PAUSE/UNPAUSE MUSIC", 32, 520, yellow);
+        CenterText("ENTER - PAUSE/UNPAUSE", 32, 560, yellow);
+        CenterText("SPACE - SHOOT", 32, 600, yellow);
+        CenterText("ESC - QUIT", 32, 640, yellow);
+    }
+    else
+    {
+        CenterText("PRESS i TO SHOW/HIDE INFO", 32, 440, GREEN);
+    }
 
     DrawTextEx(font, "START", {570, 740}, 34, 2, yellow);    
   
@@ -51,7 +64,8 @@ void UI::DrawBoss()
 }
 
 
-std::string FormatWithLeadingZeros(int number, int width) {
+std::string FormatWithLeadingZeros(int number, int width) 
+{
     std::string numberText = std::to_string(number);
     int leadingZeros = width - numberText.length();
     return numberText = std::string(leadingZeros, '0') + numberText;
@@ -59,23 +73,23 @@ std::string FormatWithLeadingZeros(int number, int width) {
 
 void UI::DrawPause()
 {
-    Vector2 pauseText = MeasureTextEx(font, "PAUSE", 64, 2);
-    DrawTextEx(font, "PAUSE", {400 - pauseText.x/2, 350 - pauseText.y/2}, 64, 2, yellow);  
-    DrawTextEx(font, "PAUSE", {570, 740}, 34, 2, yellow);    
+    CenterText("PAUSE", 64, 350, yellow);
+    DrawTextEx(font, "PAUSE", {570, 740}, 34, 2, yellow);   
+
 }
 
 void UI::DrawGameOver(int score, int highscore) 
 {
-    Vector2 gameOverText = MeasureTextEx(font, "GAME OVER", 96, 2);
-    Vector2 theRestartText = MeasureTextEx(font, "PRESS ENTER TO RESTART", 48, 2);
+
     char scoreTitle[11] = "SCORE ";
     std::string scoreText = FormatWithLeadingZeros(score, 10);
-    strcat( scoreTitle, scoreText.c_str());
-    Vector2 hsText = MeasureTextEx(font, scoreTitle, 64, 2);
-    DrawTextEx(font, "GAME OVER", {400 - gameOverText.x/2, 300 - gameOverText.y/2}, 96, 2, RED);  
+    strcat(scoreTitle, scoreText.c_str());
+
+    CenterText("GAME OVER", 96, 300, RED);
+    CenterText("PRESS ENTER TO RESTART", 48, 360, yellow);
+    CenterText(scoreTitle, 64, 450, GREEN);
     DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, yellow);   
-    DrawTextEx(font, "PRESS ENTER TO RESTART", {132 - theRestartText.x/2, 360 - theRestartText.y/2}, 48, 2, yellow);  
-    DrawTextEx(font, scoreTitle, {400 - hsText.x/2, 450 - hsText.y/2}, 64, 2, GREEN); 
+
 
 }
 

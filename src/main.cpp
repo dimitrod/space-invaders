@@ -28,11 +28,14 @@ int main()
         BeginDrawing();
 
         ui.DrawBaseUI(screenWidth, screenHeight, offset, game.score, game.highscore);
+
+        ui.DrawLives(game.lives, game.livesImage);
+        
         game.Draw();
 
         if (game.gameState == 0)
         {
-            ui.DrawStart();  
+            ui.DrawStart(game.info);  
 
         }
         else if(game.gameState == 1) {
@@ -49,20 +52,14 @@ int main()
         {
             ui.DrawPause();
 
+
         }
         else if (game.gameState == 4)
         {
             ui.DrawBoss();
+            
 
         }
-       
-        for (int i = 0; i < game.lives; i++)
-        {    
-            DrawTextureV(game.livesImage, {shipOffset + 25 + shipOffset * i, 745}, WHITE);
-        }
-
-
-
 
         
         EndDrawing();

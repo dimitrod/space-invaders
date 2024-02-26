@@ -27,7 +27,11 @@ Game::~Game()
 
 void Game::Draw()
 {
-    spaceship.Draw();
+    if (gameState != 0)
+    {
+        spaceship.Draw();
+    }
+    
 
     shieldboss.Draw();
 
@@ -68,7 +72,9 @@ void Game::Draw()
 }
 
 void Game::Update()
+
 {
+    
     if (gameState == 0)
     {
 
@@ -215,7 +221,12 @@ void Game::Update()
 
 void Game::HandleInput()
 {
-    
+    if 
+    (IsKeyPressed(KEY_I))
+    {
+        info = !info;
+    }
+
     if (IsKeyPressed(KEY_P))
     {
         pause = !pause;
