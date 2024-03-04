@@ -8,17 +8,20 @@ class Spaceship
     public:
         Spaceship();
         ~Spaceship();
+
         void Draw();
         void MoveLeft();
         void MoveRight();
         void FireLaser();
         void Reset();
-        std::vector<Laser> lasers;
         Rectangle GetRect();
+
+        std::vector<Laser> lasers;
         Texture2D image;
 
     private:
-        Vector2 position;
         double lastLaserTime;
+        
+        Vector2 position;
         Sound laserSound;
 };

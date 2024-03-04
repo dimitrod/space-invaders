@@ -1,17 +1,20 @@
 #include "game.hpp"
 #include <iostream>
 #include <fstream>
+#include <iostream>
 
 Game::Game()
 {
     music = LoadMusicStream("sound/music.ogg");
     bossMusic = LoadMusicStream("sound/boss.ogg");
     explosionSound = LoadSound("sound/explosion.ogg");
+    highscore = LoadHighscoreFromFile();
 
     PlayMusicStream(music);
     SetMusicVolume(music, 0.3);
     PlayMusicStream(bossMusic);
     SetMusicVolume(bossMusic, 0.2);
+  
 }
 
 Game::~Game()
@@ -240,8 +243,6 @@ void Game::HandleInput()
         if(gameState == 0 || gameState == 2)
         {
             Reset();
-            InitGame();
-            Reset();
             level = 2;
             NextLevel();
         }
@@ -252,7 +253,7 @@ void Game::HandleInput()
         if(gameState == 0 || gameState == 2)
         {
             Reset();
-            InitGame();
+            NextLevel();
         } 
         else if (gameState == 3)
         {
@@ -289,10 +290,12 @@ void Game::DeleteInactiveLasers(std::vector<Laser> lasers)
         if (!it -> active)
         {
             it = lasers.erase(it);
+            std::cout << "LASER DELETED\n";
         }
         else
         {
             it++;
+            std::cout << "NO LASER DELETED\n";
         }
     }
 }
@@ -630,6 +633,11 @@ void Game::GameOver()
 
 void Game::Reset()
 {
+    level = 0;
+    lives = 3; 
+    score = 0;
+    difficulty = 1.0;
+
     spaceship.Reset();
     aliens.clear();
     alienLasers.clear();
@@ -678,18 +686,6 @@ void Game::NextLevel()
     
     
 }
-
-void Game::InitGame()
-{
-    level = 0;
-    lives = 3; 
-    score = 0;
-    difficulty = 1.0;
-    highscore = LoadHighscoreFromFile();
-    NextLevel();
-    
-}
-
 
 
 void Game::CheckHighscore() 

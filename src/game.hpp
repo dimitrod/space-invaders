@@ -17,7 +17,9 @@ class Game
         void Update();
         void HandleInput();
 
+    private:
         bool info = false; 
+        bool pause = false;
 
         int gameState = 0;
         int lives = 0;
@@ -27,22 +29,31 @@ class Game
         int offset = 50;
         int screenWidth = 750;
         int screenHeight = 700;
+        int activeGameState = 0;
+        
+        float difficulty = 1.0;
 
+        UI ui;  
         Music music;
         Music bossMusic;
-        UI ui;
-
-    private:
-        void DeleteInactiveLasers(std::vector<Laser> lasers);
-        std::vector<Obstacle> CreateObstacles();
-        Spaceship spaceship;
+        Sound explosionSound;
         std::vector<Obstacle> obstacles;
         std::vector<Alien> aliens;
+        Spaceship spaceship;
+        MysteryShip mysteryShip;
+        Shieldboss shieldboss;
+        Teleportboss teleportboss;
 
+        void CheckCollisions();
+        void GameOver();
+        void Reset();
+        void NextLevel();
+        void DeleteInactiveLasers(std::vector<Laser> lasers);   
         void UpdateNormalLevel();
         void UpdateTeleportbossLevel();
         void UpdateShieldbossLevel();
 
+        std::vector<Obstacle> CreateObstacles();
         void MoveAliens();
         void MoveDownAliens(int distance);
         void ShootAlienLaser();
@@ -50,26 +61,12 @@ class Game
         int aliensDirection;
         constexpr static float alienLaserShootInterval = 0.35;
         float timeLastAlienFired;
-        MysteryShip mysteryShip;
+
+        
         float mysteryShipSpawnInterval;
         float timeLastMysteryShipSpawned;
-        void CheckCollisions();
-        void GameOver();
-        void Reset();
-        void InitGame();
-        void NextLevel();
+        
         void CheckHighscore();
-
-        Shieldboss shieldboss;
-
-        Teleportboss teleportboss;
-
-        int activeGameState;
-        bool pause = false;
-        float difficulty;
-
         void SaveHighscoreToFile(int highscore);
         int LoadHighscoreFromFile();
-        Sound explosionSound;
-
 };
