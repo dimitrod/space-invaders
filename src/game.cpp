@@ -144,8 +144,8 @@ void Game::UpdateNormalLevel()
     
     CheckCollisions();
 
-    DeleteInactiveLasers(alienLasers);
-    DeleteInactiveLasers(spaceship.lasers);
+    alienLasers = DeleteInactiveLasers(alienLasers);
+    spaceship.lasers = DeleteInactiveLasers(spaceship.lasers);
 
     if(aliens.empty())
     {
@@ -176,8 +176,8 @@ void Game::UpdateShieldbossLevel()
     
     CheckCollisions();
 
-    DeleteInactiveLasers(shieldboss.shieldbossLasers);
-    DeleteInactiveLasers(spaceship.lasers);
+    shieldboss.shieldbossLasers = DeleteInactiveLasers(shieldboss.shieldbossLasers);
+    spaceship.lasers = DeleteInactiveLasers(spaceship.lasers);
 
     
     if(!shieldboss.alive)
@@ -208,8 +208,8 @@ void Game::UpdateTeleportbossLevel()
     
     CheckCollisions();
 
-    DeleteInactiveLasers(teleportboss.teleportbossLasers);
-    DeleteInactiveLasers(spaceship.lasers);
+    teleportboss.teleportbossLasers = DeleteInactiveLasers(teleportboss.teleportbossLasers);
+    spaceship.lasers = DeleteInactiveLasers(spaceship.lasers);
 
     if(!teleportboss.alive)
     {
@@ -283,36 +283,24 @@ void Game::HandleInput()
     }
 }
 
-void Game::DeleteInactiveLasers(std::vector<Laser> lasers)
+
+std::vector<Laser> Game::DeleteInactiveLasers(std::vector<Laser> lasers)
 {
     for(auto it = lasers.begin(); it != lasers.end();)
     {
         if (!it -> active)
         {
             it = lasers.erase(it);
-            std::cout << "LASER DELETED\n";
         }
         else
         {
             it++;
-            std::cout << "NO LASER DELETED\n";
         }
     }
+
+    return lasers;
 }
 
-std::vector<Obstacle> Game::CreateObstacles()
-{
-    int obstacleWidth = Obstacle::grid[0].size() * 3;
-    float gap = (GetScreenWidth() - 4 * obstacleWidth) / 5;
-
-    for (int i = 0; i < 4; i++)
-    {
-        float offset_x = (i + 1) * gap + i * obstacleWidth;
-        obstacles.push_back(Obstacle({offset_x, float (GetScreenHeight() - 200)}));
-    }
-
-    return obstacles;
-}
 
 void Game::MoveAliens()
 {
@@ -661,14 +649,14 @@ void Game::NextLevel()
             teleportboss.alive = true;
             teleportboss.createArmor();
             gameState = 5;
-            obstacles = CreateObstacles();
+            obstacles = Obstacle::CreateObstacles();
         }
         else
         {
             shieldboss.alive = true;
             shieldboss.createArmor();
             gameState = 4;
-            obstacles = CreateObstacles();
+            obstacles = Obstacle::CreateObstacles();
         }
 
  
@@ -676,7 +664,7 @@ void Game::NextLevel()
     else 
     {
         aliens = Alien::CreateAliens();
-        obstacles = CreateObstacles();
+        obstacles = Obstacle::CreateObstacles();
         aliensDirection = 1;
         timeLastAlienFired = 0;
         gameState = 1;

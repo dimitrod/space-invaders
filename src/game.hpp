@@ -48,12 +48,11 @@ class Game
         void GameOver();
         void Reset();
         void NextLevel();
-        void DeleteInactiveLasers(std::vector<Laser> lasers);   
+        std::vector<Laser> DeleteInactiveLasers(std::vector<Laser> lasers);   
         void UpdateNormalLevel();
         void UpdateTeleportbossLevel();
         void UpdateShieldbossLevel();
 
-        std::vector<Obstacle> CreateObstacles();
         void MoveAliens();
         void MoveDownAliens(int distance);
         void ShootAlienLaser();
