@@ -7,7 +7,6 @@ Game::Game()
     music = LoadMusicStream("sound/music.ogg");
     bossMusic = LoadMusicStream("sound/boss.ogg");
     explosionSound = LoadSound("sound/explosion.ogg");
-    livesImage = LoadTexture("img/spaceship.png");
 
     PlayMusicStream(music);
     SetMusicVolume(music, 0.3);
@@ -21,11 +20,13 @@ Game::~Game()
     UnloadMusicStream(music);
     UnloadMusicStream(bossMusic);
     UnloadSound(explosionSound);
-    UnloadTexture(livesImage);
 }
 
 void Game::Draw()
 {
+    ui.DrawBaseUI(screenWidth, screenHeight, offset, score, highscore);
+    ui.DrawLives(lives, spaceship.image);
+
     if (gameState != 0)
     {
         spaceship.Draw();
@@ -65,129 +66,156 @@ void Game::Draw()
     shieldboss.Draw();
     teleportboss.Draw();
 
+    switch(gameState) {
+    case 0:
+        ui.DrawStart(info); 
+        break;
+    case 1:
+        ui.DrawLevel(level);
+        break;
+    case 2:
+        ui.DrawGameOver(score, highscore);
+        break;
+    case 3:
+        ui.DrawPause();
+        break;
+    case 4:
+        ui.DrawBoss();
+        break;
+    case 5:
+        ui.DrawBoss();
+        break;
+    }
 }
+
+
 
 void Game::Update()
 
 {
+    switch(gameState) {
+    case 1:
+        UpdateNormalLevel();
+        break;
+    case 4:
+        UpdateShieldbossLevel();
+        break;
+    case 5:
+        UpdateTeleportbossLevel();
+        break;
+    }
+}
+
+
+
+
+void Game::UpdateNormalLevel()
+{
+    double currentTime = GetTime();
+    activeGameState = 1;
+
+    UpdateMusicStream(music);
+
+    if(currentTime - timeLastMysteryShipSpawned > mysteryShipSpawnInterval)
+    {
+        mysteryShip.Spawn();
+        timeLastMysteryShipSpawned = currentTime;
+        mysteryShipSpawnInterval = GetRandomValue(10, 20);
+    }
+
+    for (auto &laser : spaceship.lasers)
+    {
+        laser.Update();
+    }
+
+    MoveAliens();
+
+    mysteryShip.Update();
+
+    ShootAlienLaser();
+
+    for (auto &laser : alienLasers)
+    {
+        laser.Update();
+    }
     
-    if (gameState == 0)
-    {
+    CheckCollisions();
 
+    DeleteInactiveLasers(alienLasers);
+    DeleteInactiveLasers(spaceship.lasers);
+
+    if(aliens.empty())
+    {
+        Reset();
+        NextLevel();
     }
-    else if(gameState == 1) 
-    {
-        UpdateMusicStream(music);
-
-        double currentTime = GetTime();
-        activeGameState = 1;
-
-        if(currentTime - timeLastMysteryShipSpawned > mysteryShipSpawnInterval)
-        {
-            mysteryShip.Spawn();
-            timeLastMysteryShipSpawned = currentTime;
-            mysteryShipSpawnInterval = GetRandomValue(10, 20);
-        }
-
-        for (auto &laser : spaceship.lasers)
-        {
-            laser.Update();
-        }
-
-        MoveAliens();
-
-        mysteryShip.Update();
-
-        ShootAlienLaser();
-
-        for (auto &laser : alienLasers)
-        {
-            laser.Update();
-        }
-        
-        CheckCollisions();
-
-        DeleteInactiveLasers();
-
-        if(aliens.empty())
-        {
-            Reset();
-            NextLevel();
-        }
-    }  
-    else if (gameState == 2)
-    {
-
-    }
-    else if (gameState == 3)
-    {
-
-    }
-    else if (gameState == 4)
-    {
-        UpdateMusicStream(bossMusic);
-        activeGameState = 4;
-
-        for (auto &laser : shieldboss.shieldbossLasers)
-        {
-            laser.Update();
-        }
-
-        for (auto &laser : spaceship.lasers)
-        {
-            laser.Update();
-        }
-
-        shieldboss.ShootShieldbossLaser();
-
-        shieldboss.MoveShieldboss();
-       
-        CheckCollisions();
-
-        DeleteInactiveLasers();
-
-        
-        if(!shieldboss.alive)
-        {
-            Reset();
-            NextLevel();
-        }
-        
-    }
-    else if (gameState == 5)
-    {
-        UpdateMusicStream(bossMusic);
-        activeGameState = 5;
-
-        for (auto &laser : teleportboss.teleportbossLasers)
-        {
-            laser.Update();
-        }
-
-        for (auto &laser : spaceship.lasers)
-        {
-            laser.Update();
-        }
-
-        teleportboss.ShootTeleportbossLaser();
-
-        teleportboss.MoveTeleportboss();
-       
-        CheckCollisions();
-
-        DeleteInactiveLasers();
-
-        
-        if(!teleportboss.alive)
-        {
-            Reset();
-            NextLevel();
-        }
-        
-    }
-
 
 }
+
+void Game::UpdateShieldbossLevel()
+{
+    UpdateMusicStream(bossMusic);
+    activeGameState = 4;
+
+    for (auto &laser : shieldboss.shieldbossLasers)
+    {
+        laser.Update();
+    }
+
+    for (auto &laser : spaceship.lasers)
+    {
+        laser.Update();
+    }
+
+    shieldboss.ShootShieldbossLaser();
+
+    shieldboss.MoveShieldboss();
+    
+    CheckCollisions();
+
+    DeleteInactiveLasers(shieldboss.shieldbossLasers);
+    DeleteInactiveLasers(spaceship.lasers);
+
+    
+    if(!shieldboss.alive)
+    {
+        Reset();
+        NextLevel();
+    }
+}
+
+void Game::UpdateTeleportbossLevel()
+{
+    UpdateMusicStream(bossMusic);
+    activeGameState = 5;
+
+    for (auto &laser : teleportboss.teleportbossLasers)
+    {
+        laser.Update();
+    }
+
+    for (auto &laser : spaceship.lasers)
+    {
+        laser.Update();
+    }
+
+    teleportboss.ShootTeleportbossLaser();
+
+    teleportboss.MoveTeleportboss();
+    
+    CheckCollisions();
+
+    DeleteInactiveLasers(teleportboss.teleportbossLasers);
+    DeleteInactiveLasers(spaceship.lasers);
+
+    if(!teleportboss.alive)
+    {
+        Reset();
+        NextLevel();
+    }
+}
+
+
 
 void Game::HandleInput()
 {
@@ -254,49 +282,13 @@ void Game::HandleInput()
     }
 }
 
-void Game::DeleteInactiveLasers()
+void Game::DeleteInactiveLasers(std::vector<Laser> lasers)
 {
-    for(auto it = spaceship.lasers.begin(); it != spaceship.lasers.end();)
+    for(auto it = lasers.begin(); it != lasers.end();)
     {
         if (!it -> active)
         {
-            it = spaceship.lasers.erase(it);
-        }
-        else
-        {
-            it++;
-        }
-    }
-
-    for(auto it = alienLasers.begin(); it != alienLasers.end();)
-    {
-        if (!it -> active)
-        {
-            it = alienLasers.erase(it);
-        }
-        else
-        {
-            it++;
-        }
-    }
-
-    for(auto it = shieldboss.shieldbossLasers.begin(); it != shieldboss.shieldbossLasers.end();)
-    {
-        if (!it -> active)
-        {
-            it = shieldboss.shieldbossLasers.erase(it);
-        }
-        else
-        {
-            it++;
-        }
-    }
-
-    for(auto it = teleportboss.teleportbossLasers.begin(); it != teleportboss.teleportbossLasers.end();)
-    {
-        if (!it -> active)
-        {
-            it = teleportboss.teleportbossLasers.erase(it);
+            it = lasers.erase(it);
         }
         else
         {

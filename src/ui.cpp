@@ -1,5 +1,4 @@
 #include "ui.hpp"
-#include "game.hpp"
 #include <cstring>
 #include <string>
 
@@ -11,7 +10,7 @@ UI::UI()
 
 UI::~UI()
 {
-    UnloadFont(font);
+   UnloadFont(font);
 }
 
 void UI::CenterText(const char *text, int fontSize, int y, Color color)

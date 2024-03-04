@@ -5,31 +5,44 @@
 #include "mysteryship.hpp"
 #include "shieldboss.hpp"
 #include "teleportboss.hpp"
+#include "ui.hpp"
 
 class Game 
 {
     public:
         Game();
         ~Game();
+
         void Draw();
         void Update();
         void HandleInput();
+
+        bool info = false; 
+
         int gameState = 0;
-        int lives;
-        Texture2D livesImage;
-        int score;
-        int highscore;
+        int lives = 0;
+        int score = 0;
+        int highscore = 0;
+        int level = 0;
+        int offset = 50;
+        int screenWidth = 750;
+        int screenHeight = 700;
+
         Music music;
         Music bossMusic;
-        int level;
-        bool info = false;
+        UI ui;
 
     private:
-        void DeleteInactiveLasers();
+        void DeleteInactiveLasers(std::vector<Laser> lasers);
         std::vector<Obstacle> CreateObstacles();
         Spaceship spaceship;
         std::vector<Obstacle> obstacles;
         std::vector<Alien> aliens;
+
+        void UpdateNormalLevel();
+        void UpdateTeleportbossLevel();
+        void UpdateShieldbossLevel();
+
         void MoveAliens();
         void MoveDownAliens(int distance);
         void ShootAlienLaser();

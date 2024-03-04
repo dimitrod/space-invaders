@@ -15,9 +15,9 @@ class Spaceship
         void Reset();
         std::vector<Laser> lasers;
         Rectangle GetRect();
+        Texture2D image;
 
     private:
-        Texture2D image;
         Vector2 position;
         double lastLaserTime;
         Sound laserSound;
