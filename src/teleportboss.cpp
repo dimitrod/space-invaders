@@ -74,3 +74,57 @@ std::vector<std::vector<int>> Teleportboss::grid = {
         {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1,0, 0, 0, 0}
     };
 
+
+
+void Teleportboss::ShootTeleportbossLaser()
+{
+
+    if (GetTime() - timeTeleportbossFired >= teleportbossLaserShootInterval && alive)
+    {
+        
+
+        if (teleportbossLaserDirection == 1)
+        {
+            float shotStart = GetRandomValue(0, 440);
+
+            for (int i = 0; i < 30; i++)
+            {
+                
+                teleportbossLasers.push_back(Laser({shotStart + i * 12, position.y + i * 2}, 8));
+            
+            }
+
+           teleportbossLaserDirection = -1;
+        }
+        else if (teleportbossLaserDirection == -1)
+        {
+            float shotStart = GetRandomValue(0, 440);
+
+            for (int i = 30; i > 0; i--)
+            {
+                
+                teleportbossLasers.push_back(Laser({shotStart + (30 - i) * 12, position.y + i * 2}, 8));
+            
+            }
+            teleportbossLaserDirection = 1;
+        }
+
+        timeTeleportbossFired = GetTime();
+    }
+
+
+}
+
+void Teleportboss::MoveTeleportboss()
+{
+    if (GetTime() - teleportbossTeleported >= teleportbossTeleportInterval && alive)
+    {
+        Update({(float) GetRandomValue(25, 727), (float) GetRandomValue(100, 400)});
+        teleportbossLasers.push_back(Laser({position.x + 23, position.y + 20}, 12));
+        teleportbossLasers.push_back(Laser({position.x + 24, position.y + 24}, 12));
+        teleportbossLasers.push_back(Laser({position.x + 25, position.y + 24}, 12));
+        teleportbossLasers.push_back(Laser({position.x + 26, position.y + 20}, 12));
+        teleportbossTeleported = GetTime();
+    }
+
+}

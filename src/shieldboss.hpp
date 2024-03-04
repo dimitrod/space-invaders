@@ -18,7 +18,10 @@ class Shieldboss
         bool alive = false;
         void ShootShieldbossLaser();
         std::vector<Laser> shieldbossLasers;
+        void MoveShieldboss();
+        void MoveShieldbossDown(int distance);
     private:
         float timeShieldbossFired = 0;
         float shieldbossLaserShootInterval = 0.5;
+        int shieldbossDirection = 2;
 };

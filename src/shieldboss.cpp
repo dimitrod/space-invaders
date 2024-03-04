@@ -68,6 +68,35 @@ Rectangle Shieldboss::GetRect()
 }
 
 
+void Shieldboss::MoveShieldboss()
+{
+     if(position.x + 69 > GetScreenWidth() - 25)
+        {
+            shieldbossDirection = GetRandomValue(-4, -1);
+            MoveShieldbossDown(16);
+        }
+        else if (position.x < 25)
+        {
+            shieldbossDirection = GetRandomValue(1, 4);
+            MoveShieldbossDown(16);
+        }
+
+        Update(shieldbossDirection);
+    
+}
+
+void Shieldboss::MoveShieldbossDown(int distance)
+{
+        position.y += distance;
+        for (auto& block : blocks)
+    {
+        block.position.y += distance;
+    }
+}
+
+
+
+
 std::vector<std::vector<int>> Shieldboss::grid = {
         {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
         {0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0},

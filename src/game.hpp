@@ -14,7 +14,7 @@ class Game
         void Draw();
         void Update();
         void HandleInput();
-        int gameState;
+        int gameState = 0;
         int lives;
         Texture2D livesImage;
         int score;
@@ -48,23 +48,11 @@ class Game
         void CheckHighscore();
 
         Shieldboss shieldboss;
-        void MoveShieldboss();
-        void MoveShieldbossDown(int distance);
-        int shieldbossDirection;
 
         Teleportboss teleportboss;
-        std::vector<Laser> teleportbossLasers;
-        void ShootTeleportbossLaser();
-        void MoveTeleportboss();
-        int teleportbossDirection;
-        float timeTeleportbossFired;
-        float teleportbossLaserShootInterval;
-        float teleportbossTeleportInterval;
-        float teleportbossTeleported;
-        int teleportbossLaserDirection;
 
         int activeGameState;
-        bool pause;
+        bool pause = false;
         float difficulty;
 
         void SaveHighscoreToFile(int highscore);

@@ -34,6 +34,22 @@ Obstacle::Obstacle(Vector2 position)
 
 }
 
+std::vector<Obstacle> Obstacle::CreateObstacles()
+{
+    std::vector<Obstacle> obstacles;
+    
+    int obstacleWidth = Obstacle::grid[0].size() * 3;
+    float gap = (GetScreenWidth() - 4 * obstacleWidth) / 5;
+
+    for (int i = 0; i < 4; i++)
+    {
+        float offset_x = (i + 1) * gap + i * obstacleWidth;
+        obstacles.push_back(Obstacle({offset_x, float (GetScreenHeight() - 200)}));
+    }
+
+    return obstacles;
+}
+
 void Obstacle::Draw()
 {
     for (auto& block : blocks)

@@ -10,6 +10,7 @@ class Obstacle
         Vector2 position;
         std::vector<Block> blocks;
         static std::vector<std::vector<int>> grid;
+        static std::vector<Obstacle> CreateObstacles();
     private:
         
 };
