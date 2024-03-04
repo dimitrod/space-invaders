@@ -10,7 +10,6 @@ int main()
     int offset = 50;
     const int screenWidth = 750;
     const int screenHeight = 700;
-    float shipOffset = 50.0;
 
     InitWindow(screenWidth + offset, screenHeight + 2 * offset, "SPACE INVADERS");
     SetTargetFPS(60);
