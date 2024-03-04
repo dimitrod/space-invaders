@@ -19,7 +19,7 @@ class Game
 
     private:
         bool info = false; 
-        bool pause = false;
+        bool pauseMusic = false;
 
         int gameState = 0;
         int lives = 0;

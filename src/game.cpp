@@ -230,11 +230,11 @@ void Game::HandleInput()
 
     if (IsKeyPressed(KEY_P))
     {
-        pause = !pause;
+        pauseMusic = !pauseMusic;
 
-        if (pause) PauseMusicStream(music);
+        if (pauseMusic) PauseMusicStream(music);
         else ResumeMusicStream(music);
-        if (pause) PauseMusicStream(bossMusic);
+        if (pauseMusic) PauseMusicStream(bossMusic);
         else ResumeMusicStream(bossMusic);
     }
 
