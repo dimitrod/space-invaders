@@ -19,6 +19,18 @@ void Shieldboss::createArmor()
     }
 }
 
+void Shieldboss::ShootShieldbossLaser()
+{
+
+    if (GetTime() - timeShieldbossFired >= shieldbossLaserShootInterval && alive)
+    {
+        shieldbossLasers.push_back(Laser({position.x + 26, position.y + 49}, 6));
+        shieldbossLasers.push_back(Laser({position.x + 46, position.y + 49}, 6));
+        timeShieldbossFired = GetTime();
+    }
+
+}
+
 void Shieldboss::Reset()
 {
     alive = false;

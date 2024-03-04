@@ -27,7 +27,6 @@ class Game
     private:
         void DeleteInactiveLasers();
         std::vector<Obstacle> CreateObstacles();
-        std::vector<Alien> CreateAliens();
         Spaceship spaceship;
         std::vector<Obstacle> obstacles;
         std::vector<Alien> aliens;
@@ -49,13 +48,9 @@ class Game
         void CheckHighscore();
 
         Shieldboss shieldboss;
-        std::vector<Laser> shieldbossLasers;
-        void ShootShieldbossLaser();
         void MoveShieldboss();
         void MoveShieldbossDown(int distance);
         int shieldbossDirection;
-        float timeShieldbossFired;
-        float shieldbossLaserShootInterval;
 
         Teleportboss teleportboss;
         std::vector<Laser> teleportbossLasers;

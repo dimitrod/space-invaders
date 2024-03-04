@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include <vector>
 
 class Alien
 {
@@ -14,6 +15,7 @@ class Alien
         void Update(float direction);
         int GetType();
         Rectangle GetRect();
+        static std::vector<Alien> CreateAliens();
     private:
 
 };

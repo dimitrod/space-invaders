@@ -57,7 +57,7 @@ void Game::Draw()
         laser.Draw();
     }
 
-    for (auto &laser : shieldbossLasers)
+    for (auto &laser : shieldboss.shieldbossLasers)
     {
         laser.Draw();
     }
@@ -158,7 +158,7 @@ void Game::Update()
         UpdateMusicStream(bossMusic);
         activeGameState = 4;
 
-        for (auto &laser : shieldbossLasers)
+        for (auto &laser : shieldboss.shieldbossLasers)
         {
             laser.Update();
         }
@@ -168,7 +168,7 @@ void Game::Update()
             laser.Update();
         }
 
-        ShootShieldbossLaser();
+        shieldboss.ShootShieldbossLaser();
 
         MoveShieldboss();
        
@@ -294,11 +294,11 @@ void Game::DeleteInactiveLasers()
         }
     }
 
-    for(auto it = shieldbossLasers.begin(); it != shieldbossLasers.end();)
+    for(auto it = shieldboss.shieldbossLasers.begin(); it != shieldboss.shieldbossLasers.end();)
     {
         if (!it -> active)
         {
-            it = shieldbossLasers.erase(it);
+            it = shieldboss.shieldbossLasers.erase(it);
         }
         else
         {
@@ -333,38 +333,6 @@ std::vector<Obstacle> Game::CreateObstacles()
     return obstacles;
 }
 
-std::vector<Alien> Game::CreateAliens()
-{
-    std::vector<Alien> aliens;
-
-    for (int row = 0; row < 5; row++)
-    {
-       for (int col = 0; col < 11; col++)
-       {
-            int alienType;
-
-            if (row == 0)
-            {
-                alienType = 3;
-            }
-            else if (row < 3)
-            {
-                alienType = 2;
-            }
-            else
-            {
-                alienType = 1;
-            }
-
-            float offset_x = 75 + col * 55;
-            float offset_y = 110 + row * 55;
-
-            aliens.push_back(Alien(alienType, {offset_x, offset_y}));
-       }
-    }
-
-    return aliens;
-}
 
 void Game::MoveAliens()
 {
@@ -511,7 +479,7 @@ void Game::CheckCollisions()
     }
 
     //Shieldboss Laser
-    for(auto& laser : shieldbossLasers)
+    for(auto& laser : shieldboss.shieldbossLasers)
     {
         if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
         {
@@ -688,7 +656,7 @@ void Game::Reset()
     spaceship.Reset();
     aliens.clear();
     alienLasers.clear();
-    shieldbossLasers.clear();
+    shieldboss.shieldbossLasers.clear();
     teleportbossLasers.clear();
     obstacles.clear();
     shieldboss.Reset();
@@ -720,8 +688,6 @@ void Game::NextLevel()
         {
             shieldboss.alive = true;
             shieldbossDirection = 2;
-            timeShieldbossFired = 0;
-            shieldbossLaserShootInterval = 0.5;
             shieldboss.createArmor();
             gameState = 4;
             obstacles = CreateObstacles();
@@ -731,8 +697,8 @@ void Game::NextLevel()
     }
     else 
     {
+        aliens = Alien::CreateAliens();
         obstacles = CreateObstacles();
-        aliens = CreateAliens();
         aliensDirection = 1;
         timeLastAlienFired = 0;
         gameState = 1;
@@ -809,18 +775,6 @@ void Game::MoveTeleportboss()
 
 }
 
-
-void Game::ShootShieldbossLaser()
-{
-
-    if (GetTime() - timeShieldbossFired >= shieldbossLaserShootInterval && shieldboss.alive)
-    {
-        shieldbossLasers.push_back(Laser({shieldboss.position.x + 26, shieldboss.position.y + 49}, 6));
-        shieldbossLasers.push_back(Laser({shieldboss.position.x + 46, shieldboss.position.y + 49}, 6));
-        timeShieldbossFired = GetTime();
-    }
-
-}
 
 void Game::MoveShieldboss()
 {
