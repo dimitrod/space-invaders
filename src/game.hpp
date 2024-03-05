@@ -16,7 +16,6 @@ class Game
 
         void Draw();
         void Update();
-        void HandleInput();
         void GameOver();
         void Reset();
         void NextLevel();
@@ -52,19 +51,10 @@ class Game
         std::vector<Alien> aliens;
 
         void CheckCollisions();
-        std::vector<Laser> DeleteInactiveLasers(std::vector<Laser> lasers);   
+        void DeleteInactiveLasers(std::vector<Laser>& lasers);   
         void UpdateNormalLevel();
         void UpdateTeleportbossLevel();
         void UpdateShieldbossLevel();
-
-        void ShootAlienLaser();
-        std::vector<Laser> alienLasers;
-        constexpr static float alienLaserShootInterval = 0.35;
-        float timeLastAlienFired;
-
-        
-        float mysteryShipSpawnInterval;
-        float timeLastMysteryShipSpawned;
         
         void CheckHighscore();
         void SaveHighscoreToFile(int highscore);

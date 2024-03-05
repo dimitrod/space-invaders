@@ -50,7 +50,7 @@ void Game::Draw()
         alien.Draw();
     }
 
-    for (auto &laser : alienLasers)
+    for (auto &laser : alienHandler.alienLasers)
     {
         laser.Draw();
     }
@@ -114,17 +114,12 @@ void Game::Update()
 
 void Game::UpdateNormalLevel()
 {
-    double currentTime = GetTime();
+    
     activeGameState = 1;
 
     UpdateMusicStream(music);
 
-    if(currentTime - timeLastMysteryShipSpawned > mysteryShipSpawnInterval)
-    {
-        mysteryShip.Spawn();
-        timeLastMysteryShipSpawned = currentTime;
-        mysteryShipSpawnInterval = GetRandomValue(10, 20);
-    }
+
 
     for (auto &laser : spaceship.lasers)
     {
@@ -135,17 +130,17 @@ void Game::UpdateNormalLevel()
 
     mysteryShip.Update();
 
-    ShootAlienLaser();
+    alienHandler.ShootAlienLaser(aliens, difficulty);
 
-    for (auto &laser : alienLasers)
+    for (auto &laser : alienHandler.alienLasers)
     {
         laser.Update();
     }
     
     CheckCollisions();
 
-    alienLasers = DeleteInactiveLasers(alienLasers);
-    spaceship.lasers = DeleteInactiveLasers(spaceship.lasers);
+    DeleteInactiveLasers(alienHandler.alienLasers);
+    DeleteInactiveLasers(spaceship.lasers);
 
     if(aliens.empty())
     {
@@ -176,8 +171,8 @@ void Game::UpdateShieldbossLevel()
     
     CheckCollisions();
 
-    shieldboss.shieldbossLasers = DeleteInactiveLasers(shieldboss.shieldbossLasers);
-    spaceship.lasers = DeleteInactiveLasers(spaceship.lasers);
+    DeleteInactiveLasers(shieldboss.shieldbossLasers);
+    DeleteInactiveLasers(spaceship.lasers);
 
     
     if(!shieldboss.alive)
@@ -208,8 +203,8 @@ void Game::UpdateTeleportbossLevel()
     
     CheckCollisions();
 
-    teleportboss.teleportbossLasers = DeleteInactiveLasers(teleportboss.teleportbossLasers);
-    spaceship.lasers = DeleteInactiveLasers(spaceship.lasers);
+    DeleteInactiveLasers(teleportboss.teleportbossLasers);
+    DeleteInactiveLasers(spaceship.lasers);
 
     if(!teleportboss.alive)
     {
@@ -219,7 +214,7 @@ void Game::UpdateTeleportbossLevel()
 }
 
 
-std::vector<Laser> Game::DeleteInactiveLasers(std::vector<Laser> lasers)
+void Game::DeleteInactiveLasers(std::vector<Laser>& lasers)
 {
     for(auto it = lasers.begin(); it != lasers.end();)
     {
@@ -233,22 +228,10 @@ std::vector<Laser> Game::DeleteInactiveLasers(std::vector<Laser> lasers)
         }
     }
 
-    return lasers;
 }
 
 
-void Game::ShootAlienLaser()
-{
-    double currentTime = GetTime();
 
-    if (currentTime - timeLastAlienFired >= alienLaserShootInterval - (difficulty-1)/8 && !aliens.empty())
-    {
-        int randomIndex = GetRandomValue(0, aliens.size() - 1);
-        Alien& alien = aliens[randomIndex];
-        alienLasers.push_back(Laser({alien.position.x + alien.alienImages[alien.type -1].width/2, alien.position.y + alien.alienImages[alien.type -1].height}, 6));
-        timeLastAlienFired = GetTime();
-    }
-}
 
 void Game::CheckCollisions()
 {
@@ -425,7 +408,7 @@ void Game::CheckCollisions()
     //Alien Lasers
 
 
-    for(auto& laser : alienLasers)
+    for(auto& laser : alienHandler.alienLasers)
     {
         if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
         {
@@ -514,9 +497,6 @@ void Game::CheckCollisions()
 
     }
 
-   
-
-
 }
 
 void Game::GameOver()
@@ -534,7 +514,7 @@ void Game::Reset()
 
     spaceship.Reset();
     aliens.clear();
-    alienLasers.clear();
+    alienHandler.alienLasers.clear();
     shieldboss.shieldbossLasers.clear();
     teleportboss.teleportbossLasers.clear();
     obstacles.clear();
@@ -569,13 +549,10 @@ void Game::NextLevel()
     }
     else 
     {
-        aliens = alienHandler.CreateAliens();
-        
+        aliens = alienHandler.CreateAliens();  
         obstacles = Obstacle::CreateObstacles();
-        timeLastAlienFired = 0;
         gameState = 1;
-        mysteryShipSpawnInterval = GetRandomValue(10, 20);
-        timeLastMysteryShipSpawned = GetTime();
+        mysteryShip.timeLastMysteryShipSpawned = GetTime();
     }  
     
 }

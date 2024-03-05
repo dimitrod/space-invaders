@@ -31,7 +31,7 @@ void MysteryShip::Update()
     }
 }
 
-void MysteryShip::Spawn()
+void MysteryShip::Appear()
 {
     alive = true;
     position.y = 90;
@@ -63,3 +63,14 @@ Rectangle MysteryShip::GetRect()
     }
 }
 
+void MysteryShip::Spawn()
+{
+    double currentTime = GetTime();
+
+    if(currentTime - timeLastMysteryShipSpawned > mysteryShipSpawnInterval)
+    {
+        Appear();
+        timeLastMysteryShipSpawned = currentTime;
+        mysteryShipSpawnInterval = GetRandomValue(10, 20);
+    }
+}

@@ -74,3 +74,17 @@ void AlienHandler::MoveAliens(std::vector<Alien>& aliens, float difficulty)
 }
 
 
+void AlienHandler::ShootAlienLaser(std::vector<Alien>& aliens, float difficulty)
+{
+    double currentTime = GetTime();
+
+    if (currentTime - timeLastAlienFired >= alienLaserShootInterval - (difficulty-1)/8 && !aliens.empty())
+    {
+        int randomIndex = GetRandomValue(0, aliens.size() - 1);
+        Alien& alien = aliens[randomIndex];
+        alienLasers.push_back(Laser({alien.position.x + alien.alienImages[alien.type -1].width/2, alien.position.y + alien.alienImages[alien.type -1].height}, 6));
+        timeLastAlienFired = GetTime();
+    }
+}
+
+
