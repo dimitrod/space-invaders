@@ -1,17 +1,18 @@
 # space-invaders
-A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was written as part of the tutorial, I didn't just clone/fork the repo. It should be verifiable by the differences in class names, spacings and so on.  😄
+A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was written as part of the tutorial and most of it has been refactored at this point - feel free to compare this repo to the tutorial repo (at the bottom of this readme).
 <br>
 
 ## Additonal features implemented by me:
-1. Start menu with keybindings and skip to random boss (press 1)
+1. Start menu with keybindings (press i) and skip to random boss (press 1)
 2. Pause button & pause music button
-3. "Game Over" screen with score
-4. Game states
-5. Separate UI class
-6. Levels and infinite play
-7. Boss battles every third level
-8. Two different bosses - beat them for bonus lives!
-9. Rising difficulty (max. reached after 10 levels)
+3. Levels and infinite play
+4. Boss battles every third level
+5. Two different bosses - beat them for bonus lives!
+6. Rising difficulty (max. reached after 10 levels)
+7. Mostly refactored code for better structure
+8. New AlienHandler, CollisionHandler, Highscore, UI classes
+9. UI overhaul
+10. Game states
 
 ## Possible future features:
 1. More bosses
@@ -20,10 +21,9 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 4. Different player ship designs
 5. More sounds
 
-## How to compile:
-1. Use VSCode
-2. Clone repo
-3. Install raylib (https://www.raylib.com/) to default path 
+## How to compile with VSCode:
+1. Install raylib (https://www.raylib.com/) to default path
+2. Clone repo 
 3. Start the main.code-workspace file
 4. Press F5
 
