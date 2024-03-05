@@ -8,7 +8,7 @@ class AlienHandler
         ~AlienHandler();
 
         std::vector<Alien> CreateAliens();
-        std::vector<Alien> MoveAliens(std::vector<Alien> aliens, float difficulty);
+        void MoveAliens(std::vector<Alien>& aliens, float difficulty);
 
     private:
         int aliensDirection = 1;

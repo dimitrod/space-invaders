@@ -131,7 +131,7 @@ void Game::UpdateNormalLevel()
         laser.Update();
     }
 
-    aliens = alienHandler.MoveAliens(aliens, difficulty);
+    alienHandler.MoveAliens(aliens, difficulty);
 
     mysteryShip.Update();
 
@@ -215,71 +215,6 @@ void Game::UpdateTeleportbossLevel()
     {
         Reset();
         NextLevel();
-    }
-}
-
-
-
-void Game::HandleInput()
-{
-    if 
-    (IsKeyPressed(KEY_I))
-    {
-        info = !info;
-    }
-
-    if (IsKeyPressed(KEY_P))
-    {
-        pauseMusic = !pauseMusic;
-
-        if (pauseMusic) PauseMusicStream(music);
-        else ResumeMusicStream(music);
-        if (pauseMusic) PauseMusicStream(bossMusic);
-        else ResumeMusicStream(bossMusic);
-    }
-
-    if(IsKeyDown(49))
-    {
-        if(gameState == 0 || gameState == 2)
-        {
-            Reset();
-            level = 2;
-            NextLevel();
-        }
-    }
-
-    if (IsKeyPressed(KEY_ENTER))
-    {
-        if(gameState == 0 || gameState == 2)
-        {
-            Reset();
-            NextLevel();
-        } 
-        else if (gameState == 3)
-        {
-            gameState = activeGameState;
-        }
-        else if (gameState == 1 || gameState == 4 || gameState == 5)
-        {
-            gameState = 3;
-        }
-
-    }
-
-    if(gameState == 1 || gameState == 4 || gameState == 5){
-        if (IsKeyDown(KEY_LEFT))
-        {
-            spaceship.MoveLeft();
-        }
-        else if (IsKeyDown(KEY_RIGHT))
-        {
-            spaceship.MoveRight();
-        }
-        if (IsKeyPressed(KEY_SPACE))
-        {
-            spaceship.FireLaser();
-        }
-        
     }
 }
 
@@ -615,6 +550,7 @@ void Game::NextLevel()
 
     if(level % 3 == 0) {
         Reset();
+
         if(GetRandomValue(0, 1) == 0)
         {
             teleportboss.alive = true;
@@ -630,7 +566,6 @@ void Game::NextLevel()
             obstacles = Obstacle::CreateObstacles();
         }
 
- 
     }
     else 
     {
@@ -641,8 +576,7 @@ void Game::NextLevel()
         gameState = 1;
         mysteryShipSpawnInterval = GetRandomValue(10, 20);
         timeLastMysteryShipSpawned = GetTime();
-    }
-    
+    }  
     
 }
 

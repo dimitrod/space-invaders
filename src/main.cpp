@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include "game.hpp"
+#include "inputhandler.hpp"
 
 #include <cstring>
 #include <string>
@@ -21,7 +22,7 @@ int main()
     while (!WindowShouldClose())
     {
         
-        game.HandleInput();
+        InputHandler::HandleInput(game);
         game.Update();
 
         BeginDrawing();

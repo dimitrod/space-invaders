@@ -1,11 +1,11 @@
 #pragma once
 #include <raylib.h>
+#include "game.hpp"
 
 class InputHandler 
 {
     public:
-        bool info = false;
-        void InfoPressed();
+        static void HandleInput(Game& game);
 
     private:
         

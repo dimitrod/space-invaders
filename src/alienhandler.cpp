@@ -41,7 +41,7 @@ std::vector<Alien> AlienHandler::CreateAliens() {
     return aliens;
 }
 
-std::vector<Alien> AlienHandler::MoveAliens(std::vector<Alien> aliens, float difficulty)
+void AlienHandler::MoveAliens(std::vector<Alien>& aliens, float difficulty)
 {
     for (auto &alien : aliens)
     {
@@ -70,8 +70,6 @@ std::vector<Alien> AlienHandler::MoveAliens(std::vector<Alien> aliens, float dif
         alien.Update(aliensDirection);
 
     }
-
-    return aliens;
 
 }
 
