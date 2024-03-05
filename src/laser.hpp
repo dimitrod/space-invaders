@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include <vector>
 
 class Laser
 {
@@ -9,6 +10,7 @@ class Laser
         void Update();
         bool active = true;
         Rectangle GetRect();
+        static void DeleteInactiveLasers(std::vector<Laser>& lasers);
 
     private:
         Vector2 position;

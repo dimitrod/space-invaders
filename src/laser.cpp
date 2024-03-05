@@ -36,3 +36,19 @@ Rectangle Laser::GetRect()
     Rectangle rect = {position.x, position.y, 4, 15};
     return rect;
 }
+
+void Laser::DeleteInactiveLasers(std::vector<Laser>& lasers)
+{
+    for(auto it = lasers.begin(); it != lasers.end();)
+    {
+        if (!it -> active)
+        {
+            it = lasers.erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
+
+}

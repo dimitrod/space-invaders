@@ -1,6 +1,4 @@
 #include "game.hpp"
-#include <iostream>
-#include <fstream>
 
 Game::Game()
 {
@@ -106,23 +104,19 @@ void Game::Update()
 }
 
 void Game::UpdateNormalLevel()
-{
-    
+{ 
     activeGameState = 1;
 
     UpdateMusicStream(music);
-
-
 
     for (auto &laser : spaceship.lasers)
     {
         laser.Update();
     }
 
-    alienHandler.MoveAliens(aliens, difficulty);
-
     mysteryShip.Update();
 
+    alienHandler.MoveAliens(aliens, difficulty);
     alienHandler.ShootAlienLaser(aliens, difficulty);
 
     for (auto &laser : alienHandler.alienLasers)
@@ -132,8 +126,8 @@ void Game::UpdateNormalLevel()
     
     CheckCollisions();
 
-    DeleteInactiveLasers(alienHandler.alienLasers);
-    DeleteInactiveLasers(spaceship.lasers);
+    Laser::DeleteInactiveLasers(alienHandler.alienLasers);
+    Laser::DeleteInactiveLasers(spaceship.lasers);
 
     if(aliens.empty())
     {
@@ -162,8 +156,8 @@ void Game::UpdateShieldbossLevel()
     
     CheckCollisions();
 
-    DeleteInactiveLasers(shieldboss.shieldbossLasers);
-    DeleteInactiveLasers(spaceship.lasers);
+    Laser::DeleteInactiveLasers(shieldboss.shieldbossLasers);
+    Laser::DeleteInactiveLasers(spaceship.lasers);
 
     if(!shieldboss.alive)
     {
@@ -192,8 +186,8 @@ void Game::UpdateTeleportbossLevel()
     
     CheckCollisions();
 
-    DeleteInactiveLasers(teleportboss.teleportbossLasers);
-    DeleteInactiveLasers(spaceship.lasers);
+    Laser::DeleteInactiveLasers(teleportboss.teleportbossLasers);
+    Laser::DeleteInactiveLasers(spaceship.lasers);
 
     if(!teleportboss.alive)
     {
@@ -202,36 +196,22 @@ void Game::UpdateTeleportbossLevel()
     }
 }
 
-
-void Game::DeleteInactiveLasers(std::vector<Laser>& lasers)
-{
-    for(auto it = lasers.begin(); it != lasers.end();)
-    {
-        if (!it -> active)
-        {
-            it = lasers.erase(it);
-        }
-        else
-        {
-            it++;
-        }
-    }
-
-}
-
 void Game::GameOver()
 {
     gameState = 2;
 
 }
 
-void Game::Reset()
+void Game::Init()
 {
     level = 0;
     lives = 3; 
     score = 0;
     difficulty = 1.0;
+}
 
+void Game::Reset()
+{
     spaceship.Reset();
     aliens.clear();
     alienHandler.alienLasers.clear();
@@ -242,10 +222,10 @@ void Game::Reset()
     teleportboss.Reset();
 }
 
-
 void Game::NextLevel()
 {
     level++;
+
     if (difficulty < 2.0) difficulty += 0.1;
 
     if(level % 3 == 0) {
@@ -277,272 +257,45 @@ void Game::NextLevel()
     
 }
 
-
 void Game::CheckCollisions()
 {
     //Spaceship Laser
     for (auto &laser : spaceship.lasers)
     {
-        auto it = aliens.begin();
-
-        while (it != aliens.end())
-        {
-            if (CheckCollisionRecs(it -> GetRect(), laser.GetRect()))
-            {
-                PlaySound(explosionSound);
-                score += 100 * it -> type;
-                it = aliens.erase(it);
-                laser.active = false;
-                Highscore::CheckHighscore(score, highscore);
-            }
-            else
-            {
-                it++;
-            }
-        }
-
         for(auto& obstacle : obstacles)
         {
-         auto it = obstacle.blocks.begin();
-
-            while (it != obstacle.blocks.end()){ 
-                if (CheckCollisionRecs(it -> GetRect(), laser.GetRect()))
-                {
-                    it = obstacle.blocks.erase(it);
-                    laser.active = false;
-                }
-                else
-                {
-                    it++;
-                }
-
-        }
-    }
-
-    if (CheckCollisionRecs(mysteryShip.GetRect(), laser.GetRect()))
-    {
-        PlaySound(explosionSound);
-        score += 500;
-        mysteryShip.alive = false;
-        laser.active = false;
-        Highscore::CheckHighscore(score, highscore);
-    }
-
-    auto bl = shieldboss.blocks.begin();
-
-    while (bl != shieldboss.blocks.end()){ 
-        if (CheckCollisionRecs(bl -> GetRect(), laser.GetRect()))
-        {
-            bl = shieldboss.blocks.erase(bl);
-            laser.active = false;
-        }
-        else
-        {
-            bl++;
+            CollisionHandler::ObstacleCollision(obstacle.blocks, laser);
         }
 
-    }
+        CollisionHandler::ObstacleCollision(shieldboss.blocks, laser);
+        CollisionHandler::ObstacleCollision(teleportboss.blocks, laser);
 
-    auto tl = teleportboss.blocks.begin();
-
-    while (tl != teleportboss.blocks.end()){ 
-        if (CheckCollisionRecs(tl -> GetRect(), laser.GetRect()))
-        {
-            tl = teleportboss.blocks.erase(tl);
-            laser.active = false;
-        }
-        else
-        {
-            tl++;
-        }
-
-    }
-
-    if (CheckCollisionRecs(shieldboss.GetRect(), laser.GetRect()) && shieldboss.alive)
-    {
-        PlaySound(explosionSound);
-        score += 15000;
-        lives++;
-        shieldboss.alive = false;
-        laser.active = false;
-        Highscore::CheckHighscore(score, highscore);
-    }
-
-    if (CheckCollisionRecs(teleportboss.GetRect(), laser.GetRect()) && teleportboss.alive)
-    {
-        PlaySound(explosionSound);
-        score += 25000;
-        lives += 2;
-        teleportboss.alive = false;
-        laser.active = false;
-        Highscore::CheckHighscore(score, highscore);
-    }
+        CollisionHandler::PlayerHit(laser, score, highscore, aliens, explosionSound);
+        CollisionHandler::PlayerHit(laser, lives, score, highscore, shieldboss, explosionSound);
+        CollisionHandler::PlayerHit(laser, lives, score, highscore, teleportboss, explosionSound);
+        CollisionHandler::PlayerHit(laser, score, highscore, mysteryShip, explosionSound);
         
     }
 
-    //Shieldboss Laser
-    for(auto& laser : shieldboss.shieldbossLasers)
-    {
-        if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
-        {
-            lives--;
-            laser.active = false;
-
-            if (lives == 0)
-            {
-                GameOver();
-            }
-        }
-
-        for(auto& obstacle : obstacles)
-        {
-         auto et = obstacle.blocks.begin();
-
-            while (et != obstacle.blocks.end()){ 
-                if (CheckCollisionRecs(et -> GetRect(), laser.GetRect()))
-                {
-                    et = obstacle.blocks.erase(et);
-                    laser.active = false;
-                }
-                else
-                {
-                    et++;
-                }
-
-            }
-        }
-
-    }
-
-
-   //Teleportboss Laser
-    for(auto& laser : teleportboss.teleportbossLasers)
-    {
-        if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
-        {
-            lives--;
-            laser.active = false;
-
-            if (lives == 0)
-            {
-                GameOver();
-            }
-        }
-
-        for(auto& obstacle : obstacles)
-        {
-         auto et = obstacle.blocks.begin();
-
-            while (et != obstacle.blocks.end()){ 
-                if (CheckCollisionRecs(et -> GetRect(), laser.GetRect()))
-                {
-                    et = obstacle.blocks.erase(et);
-                    laser.active = false;
-                }
-                else
-                {
-                    et++;
-                }
-
-            }
-        }
-
-    }
-
-
-    //Alien Lasers
-
-
-    for(auto& laser : alienHandler.alienLasers)
-    {
-        if (CheckCollisionRecs(spaceship.GetRect(), laser.GetRect()))
-        {
-            lives--;
-            laser.active = false;
-
-            if (lives == 0)
-            {
-                GameOver();
-            }
-        }
-
-        for(auto& obstacle : obstacles)
-        {
-         auto it = obstacle.blocks.begin();
-
-            while (it != obstacle.blocks.end()){ 
-                if (CheckCollisionRecs(it -> GetRect(), laser.GetRect()))
-                {
-                    it = obstacle.blocks.erase(it);
-                    laser.active = false;
-                }
-                else
-                {
-                    it++;
-                }
-
-            }
-        }
-
-    }
-
-    //Alien and Obstacle
+    CollisionHandler::LaserCollision(spaceship, shieldboss.shieldbossLasers, obstacles, lives);
+    CollisionHandler::LaserCollision(spaceship, teleportboss.teleportbossLasers, obstacles, lives);
+    CollisionHandler::LaserCollision(spaceship, alienHandler.alienLasers, obstacles, lives);
 
     for(auto& alien : aliens)
     {
-        for(auto& obstacle : obstacles)
-        {
-            auto it = obstacle.blocks.begin();
-
-            while (it != obstacle.blocks.end()){ 
-                if (CheckCollisionRecs(it -> GetRect(), alien.GetRect()))
-                {
-                    it = obstacle.blocks.erase(it);
-                }
-                else
-                {
-                    it++;
-                }
-
-            }
-        }
-
-        if(CheckCollisionRecs(alien.GetRect(), spaceship.GetRect()))
-        {
-            GameOver();
-        }
-
+        CollisionHandler::NPCObstacleCollision(obstacles, lives, alien.GetRect());
+        CollisionHandler::NPCShipCollision(spaceship, lives, alien.GetRect());
     }
-
-    //Shieldboss and Obstacle
 
     if(shieldboss.alive)
     {
-        for(auto& obstacle : obstacles)
-        {
-            auto it = obstacle.blocks.begin();
+        CollisionHandler::NPCObstacleCollision(obstacles, lives, shieldboss.GetRect());
+        CollisionHandler::NPCShipCollision(spaceship, lives, shieldboss.GetRect());
+    }
 
-            while (it != obstacle.blocks.end()){ 
-                if (CheckCollisionRecs(it -> GetRect(), shieldboss.GetRect()))
-                {
-                    it = obstacle.blocks.erase(it);
-                }
-                else
-                {
-                    it++;
-                }
-
-            }
-        }
-
-        if(CheckCollisionRecs(shieldboss.GetRect(), spaceship.GetRect()))
-        {
-            GameOver();
-        }
-
+    if (lives <= 0)
+    {
+        GameOver();
     }
 
 }
-
-
-

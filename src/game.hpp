@@ -7,6 +7,7 @@
 #include "shieldboss.hpp"
 #include "teleportboss.hpp"
 #include "ui.hpp"
+#include "collisionhandler.hpp"
 #include "highscore.hpp"
 
 class Game 
@@ -19,6 +20,7 @@ class Game
         void Update();
         void GameOver();
         void Reset();
+        void Init();
         void NextLevel();
 
         bool info = false; 
@@ -27,13 +29,19 @@ class Game
         int gameState = 0;
         int activeGameState = 0;
         int level;
+        int lives;
 
         Music music;
         Music bossMusic;
         Spaceship spaceship;
+        std::vector<Obstacle> obstacles;
+        AlienHandler alienHandler;  
+        MysteryShip mysteryShip;
+        Shieldboss shieldboss;
+        Teleportboss teleportboss;
+        std::vector<Alien> aliens;
 
     private:
-        int lives;
         int score;
         int highscore = 0;
         int offset = 50;
@@ -42,14 +50,8 @@ class Game
         
         float difficulty;
 
-        UI ui;  
+        UI ui;
         Sound explosionSound;
-        std::vector<Obstacle> obstacles;
-        AlienHandler alienHandler;  
-        MysteryShip mysteryShip;
-        Shieldboss shieldboss;
-        Teleportboss teleportboss;
-        std::vector<Alien> aliens;
 
         void CheckCollisions();
         void DeleteInactiveLasers(std::vector<Laser>& lasers);   

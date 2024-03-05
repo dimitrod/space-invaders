@@ -23,6 +23,7 @@ void InputHandler::HandleInput(Game& game)
     {
         if(game.gameState == 0 || game.gameState == 2)
         {
+            game.Init();
             game.Reset();
             game.level = 2;
             game.NextLevel();
@@ -33,6 +34,7 @@ void InputHandler::HandleInput(Game& game)
     {
         if(game.gameState == 0 || game.gameState == 2)
         {
+            game.Init();
             game.Reset();
             game.NextLevel();
         } 
