@@ -4,7 +4,7 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 
 ## Additonal features implemented by me:
 1. Start menu with keybindings (press i) and skip to random boss (press 1)
-2. Pause button & pause music button
+2. Pause button (ENTER) & pause music button (p)
 3. Levels and infinite play
 4. Boss battles every third level
 5. Two different bosses - beat them for bonus lives!
