@@ -7,6 +7,7 @@
 #include "shieldboss.hpp"
 #include "teleportboss.hpp"
 #include "ui.hpp"
+#include "highscore.hpp"
 
 class Game 
 {
@@ -56,7 +57,4 @@ class Game
         void UpdateTeleportbossLevel();
         void UpdateShieldbossLevel();
         
-        void CheckHighscore();
-        void SaveHighscoreToFile(int highscore);
-        int LoadHighscoreFromFile();
 };
