@@ -65,37 +65,3 @@ Rectangle Alien::GetRect()
 {
     return {position.x, position.y, float(alienImages[type - 1].width), float(alienImages[type - 1].height)};
 }
-
-
-std::vector<Alien> Alien::CreateAliens() {
-
-    std::vector<Alien> aliens;
-
-    for (int row = 0; row < 5; row++)
-    {
-       for (int col = 0; col < 11; col++)
-       {
-            int alienType;
-
-            if (row == 0)
-            {
-                alienType = 3;
-            }
-            else if (row < 3)
-            {
-                alienType = 2;
-            }
-            else
-            {
-                alienType = 1;
-            }
-
-            float offset_x = 75 + col * 55;
-            float offset_y = 110 + row * 55;
-
-            aliens.push_back(Alien(alienType, {offset_x, offset_y}));
-       }
-    }
-
-    return aliens;
-}

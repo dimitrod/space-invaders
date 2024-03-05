@@ -15,7 +15,7 @@ class Alien
         void Update(float direction);
         int GetType();
         Rectangle GetRect();
-        static std::vector<Alien> CreateAliens();
+        
     private:
 
 };

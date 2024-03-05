@@ -131,7 +131,7 @@ void Game::UpdateNormalLevel()
         laser.Update();
     }
 
-    MoveAliens();
+    aliens = alienHandler.MoveAliens(aliens, difficulty);
 
     mysteryShip.Update();
 
@@ -299,35 +299,6 @@ std::vector<Laser> Game::DeleteInactiveLasers(std::vector<Laser> lasers)
     }
 
     return lasers;
-}
-
-
-void Game::MoveAliens()
-{
-    for (auto &alien : aliens)
-    {
-        if(alien.position.x + alien.alienImages[alien.type -1].width > GetScreenWidth() - 25)
-        {
-            aliensDirection = -1;
-            MoveDownAliens(4);
-        }
-        else if (alien.position.x < 25)
-        {
-            aliensDirection = 1;
-            MoveDownAliens(4);
-        }
-
-        alien.Update(aliensDirection);
-
-    }
-}
-
-void Game::MoveDownAliens(int distance)
-{
-    for (auto &alien : aliens)
-    {
-        alien.position.y += distance * ((difficulty * difficulty) - 1);
-    }
 }
 
 
@@ -663,9 +634,9 @@ void Game::NextLevel()
     }
     else 
     {
-        aliens = Alien::CreateAliens();
+        aliens = alienHandler.CreateAliens();
+        
         obstacles = Obstacle::CreateObstacles();
-        aliensDirection = 1;
         timeLastAlienFired = 0;
         gameState = 1;
         mysteryShipSpawnInterval = GetRandomValue(10, 20);

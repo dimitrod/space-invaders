@@ -2,6 +2,7 @@
 #include "spaceship.hpp"
 #include "obstacle.hpp"
 #include "alien.hpp"
+#include "alienhandler.hpp"
 #include "mysteryship.hpp"
 #include "shieldboss.hpp"
 #include "teleportboss.hpp"
@@ -21,28 +22,29 @@ class Game
         bool info = false; 
         bool pauseMusic = false;
 
+        int lives;
+        int score;
+        int level;
         int gameState = 0;
-        int lives = 0;
-        int score = 0;
         int highscore = 0;
-        int level = 0;
         int offset = 50;
         int screenWidth = 750;
         int screenHeight = 700;
         int activeGameState = 0;
         
-        float difficulty = 1.0;
+        float difficulty;
 
         UI ui;  
         Music music;
         Music bossMusic;
         Sound explosionSound;
         std::vector<Obstacle> obstacles;
-        std::vector<Alien> aliens;
+        AlienHandler alienHandler;
         Spaceship spaceship;
         MysteryShip mysteryShip;
         Shieldboss shieldboss;
         Teleportboss teleportboss;
+        std::vector<Alien> aliens;
 
         void CheckCollisions();
         void GameOver();
@@ -53,11 +55,8 @@ class Game
         void UpdateTeleportbossLevel();
         void UpdateShieldbossLevel();
 
-        void MoveAliens();
-        void MoveDownAliens(int distance);
         void ShootAlienLaser();
         std::vector<Laser> alienLasers;
-        int aliensDirection;
         constexpr static float alienLaserShootInterval = 0.35;
         float timeLastAlienFired;
 
