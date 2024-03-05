@@ -13,7 +13,6 @@ Game::Game()
     SetMusicVolume(music, 0.3);
     PlayMusicStream(bossMusic);
     SetMusicVolume(bossMusic, 0.2);
-  
 }
 
 Game::~Game()
@@ -90,8 +89,6 @@ void Game::Draw()
     }
 }
 
-
-
 void Game::Update()
 
 {
@@ -107,9 +104,6 @@ void Game::Update()
         break;
     }
 }
-
-
-
 
 void Game::UpdateNormalLevel()
 {
@@ -146,7 +140,6 @@ void Game::UpdateNormalLevel()
         Reset();
         NextLevel();
     }
-
 }
 
 void Game::UpdateShieldbossLevel()
@@ -165,7 +158,6 @@ void Game::UpdateShieldbossLevel()
     }
 
     shieldboss.ShootShieldbossLaser();
-
     shieldboss.MoveShieldboss();
     
     CheckCollisions();
@@ -173,7 +165,6 @@ void Game::UpdateShieldbossLevel()
     DeleteInactiveLasers(shieldboss.shieldbossLasers);
     DeleteInactiveLasers(spaceship.lasers);
 
-    
     if(!shieldboss.alive)
     {
         Reset();
@@ -197,7 +188,6 @@ void Game::UpdateTeleportbossLevel()
     }
 
     teleportboss.ShootTeleportbossLaser();
-
     teleportboss.MoveTeleportboss();
     
     CheckCollisions();
@@ -229,7 +219,63 @@ void Game::DeleteInactiveLasers(std::vector<Laser>& lasers)
 
 }
 
+void Game::GameOver()
+{
+    gameState = 2;
 
+}
+
+void Game::Reset()
+{
+    level = 0;
+    lives = 3; 
+    score = 0;
+    difficulty = 1.0;
+
+    spaceship.Reset();
+    aliens.clear();
+    alienHandler.alienLasers.clear();
+    shieldboss.shieldbossLasers.clear();
+    teleportboss.teleportbossLasers.clear();
+    obstacles.clear();
+    shieldboss.Reset();
+    teleportboss.Reset();
+}
+
+
+void Game::NextLevel()
+{
+    level++;
+    if (difficulty < 2.0) difficulty += 0.1;
+
+    if(level % 3 == 0) {
+        Reset();
+
+        if(GetRandomValue(0, 1) == 0)
+        {
+            teleportboss.alive = true;
+            teleportboss.createArmor();
+            gameState = 5;
+            obstacles = Obstacle::CreateObstacles();
+        }
+        else
+        {
+            shieldboss.alive = true;
+            shieldboss.createArmor();
+            gameState = 4;
+            obstacles = Obstacle::CreateObstacles();
+        }
+
+    }
+    else 
+    {
+        aliens = alienHandler.CreateAliens();  
+        obstacles = Obstacle::CreateObstacles();
+        gameState = 1;
+        mysteryShip.timeLastMysteryShipSpawned = GetTime();
+    }  
+    
+}
 
 
 void Game::CheckCollisions()
@@ -497,66 +543,6 @@ void Game::CheckCollisions()
     }
 
 }
-
-void Game::GameOver()
-{
-    gameState = 2;
-
-}
-
-void Game::Reset()
-{
-    level = 0;
-    lives = 3; 
-    score = 0;
-    difficulty = 1.0;
-
-    spaceship.Reset();
-    aliens.clear();
-    alienHandler.alienLasers.clear();
-    shieldboss.shieldbossLasers.clear();
-    teleportboss.teleportbossLasers.clear();
-    obstacles.clear();
-    shieldboss.Reset();
-    teleportboss.Reset();
-}
-
-
-void Game::NextLevel()
-{
-    level++;
-    if (difficulty < 2.0) difficulty += 0.1;
-
-    if(level % 3 == 0) {
-        Reset();
-
-        if(GetRandomValue(0, 1) == 0)
-        {
-            teleportboss.alive = true;
-            teleportboss.createArmor();
-            gameState = 5;
-            obstacles = Obstacle::CreateObstacles();
-        }
-        else
-        {
-            shieldboss.alive = true;
-            shieldboss.createArmor();
-            gameState = 4;
-            obstacles = Obstacle::CreateObstacles();
-        }
-
-    }
-    else 
-    {
-        aliens = alienHandler.CreateAliens();  
-        obstacles = Obstacle::CreateObstacles();
-        gameState = 1;
-        mysteryShip.timeLastMysteryShipSpawned = GetTime();
-    }  
-    
-}
-
-
 
 
 
