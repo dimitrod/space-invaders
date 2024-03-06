@@ -10,8 +10,8 @@ A C++ Space Invaders clone based on a tutorial by @educ8s. The base code was wri
 5. Two different bosses - beat them for bonus lives!
 6. Rising difficulty (max. reached after 10 levels)
 7. Mostly refactored code for better structure
-8. New AlienHandler, CollisionHandler, Highscore, UI classes
-9. UI overhaul
+8. New AlienHandler, CollisionHandler, InputHandler, Highscore, UI classes
+9. Improved UI
 10. Game states
 
 ## Possible future features:
